@@ -156,6 +156,8 @@
 
 html.still *, html.still *::before, html.still *::after { animation: none !important; transition: none !important; }
 html.still .boot { opacity: 1 !important; transform: none !important; filter: none !important; }
+html.loading #stage { opacity: 0; }
+.live-error { display:flex; align-items:center; justify-content:center; width:1600px; height:900px; color:#5ad8f5; font-family:'Orbitron',sans-serif; font-size:32px; letter-spacing:6px; }
 </style>
 </head>
 <body>
@@ -216,6 +218,7 @@ html.still .boot { opacity: 1 !important; transform: none !important; filter: no
 
 <script>
 if (new URLSearchParams(location.search).has('still')) document.documentElement.classList.add('still');
+document.documentElement.classList.add('loading');
 /* =====================================================================
    FRIDAY PROFIT DASHBOARD
    Live page: fetches profit.json on load and renders the actual portfolio.
@@ -724,15 +727,17 @@ function applyLive(l){
   needRender = true;
   tick();
   document.body.dataset.liveReady = '1';
+  document.documentElement.classList.remove('loading');
 }
 
-fetch('profit.json', {cache:'no-store'})
+fetch('profit.json?v=' + Date.now(), {cache:'no-store'})
   .then(r => { if (!r.ok) throw new Error('profit.json HTTP ' + r.status); return r.json(); })
   .then(applyLive)
   .catch(err => {
     document.body.dataset.liveError = '1';
-    const footers = document.querySelectorAll('.footer');
-    if (footers.length > 1) footers[1].textContent = 'LIVE FEED UNAVAILABLE';
+    document.documentElement.classList.remove('loading');
+    const stage = document.getElementById('stage');
+    if (stage) stage.innerHTML = '<div class="live-error">LIVE FEED UNAVAILABLE</div>';
     console.error('FRIDAY live feed:', err);
   });
 
