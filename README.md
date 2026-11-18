@@ -1,3 +1,4 @@
+> **Live feed:** FRIDAY reads `profit.json` for Marcus's portfolio value and P&L. The `index.html` page is a separate design simulation, not the live report and not used by the bot. Replace the seeded $10,000 baseline in `profit.json` with Marcus's actual deposit after onboarding.
 # FRIDAY · Profit Update
 
 A simulated portfolio dashboard: **$10,000 → $1,000,000 over 18 months**
