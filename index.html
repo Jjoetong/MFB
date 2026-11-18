@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRIDAY | Profit Update</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500&family=Orbitron:wght@500;600&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#061217; --cyan:#5ad8f5; --mint:#7ff2d6; --green:#3ef0a8; --rose:#ff5c7a;
+    --gold:#d9a441; --dim:#7f9aa2; --text:#e4f3f6; --line:rgba(90,216,245,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(ellipse at 20% 40%,#0c2229 0%,#071419 55%,#050e12 100%)}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;
+    background:
+      linear-gradient(112deg,transparent 0 34%,rgba(120,210,225,.035) 34% 47%,transparent 47% 100%),
+      linear-gradient(112deg,transparent 0 58%,rgba(120,210,225,.03) 58% 66%,transparent 66% 100%),
+      radial-gradient(ellipse at 18% 38%,rgba(40,120,130,.18) 0%,transparent 45%),
+      linear-gradient(180deg,#0a1c22 0%,#081619 60%,#071317 100%)}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px)}
+  .abs{position:absolute}
+  .corner{position:absolute;width:37px;height:37px;border-color:rgba(120,190,205,.55);border-style:solid;border-width:0}
+  .c-tl{left:19px;top:19px;border-left-width:2px;border-top-width:2px}
+  .c-tr{right:19px;top:19px;border-right-width:2px;border-top-width:2px}
+  .c-bl{left:19px;bottom:19px;border-left-width:2px;border-bottom-width:2px}
+  .c-br{right:19px;bottom:19px;border-right-width:2px;border-bottom-width:2px}
+
+  /* header */
+  .brand{left:118px;top:40px;font-family:'Rajdhani';font-weight:600;font-size:33px;letter-spacing:.62em;color:#eaf6f8;line-height:1}
+  .brand-sub{left:119px;top:85px;font-family:'Rajdhani';font-weight:600;font-size:11px;letter-spacing:.55em;color:var(--gold);line-height:1}
+  .pill{height:34px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani';font-weight:600;
+    clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+    background:linear-gradient(180deg,rgba(26,62,72,.55),rgba(14,38,46,.55))}
+  .pill-wrap{padding:1px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));background:rgba(90,216,245,.32)}
+  .online{width:105px;font-size:14.5px;letter-spacing:.2em;color:#4ff0c0;gap:7px}
+  .online i{width:8px;height:8px;border-radius:50%;background:#3ef0a8;box-shadow:0 0 8px #3ef0a8;animation:blink 2.4s ease-in-out infinite}
+  .clock{width:231px;font-size:15px;letter-spacing:.17em;color:#e0eef2}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* gauge */
+  .g-label{position:absolute;left:0;width:542px;text-align:center;line-height:1}
+  .g-title{top:262px;font-size:11.5px;letter-spacing:.45em;color:#a9c0c6;font-weight:600}
+  .g-value{top:292px;font-family:'Exo 2';font-weight:400;font-size:52px;color:#f2fbfc;letter-spacing:.01em;text-shadow:0 0 18px rgba(130,220,240,.25)}
+  .g-value sup{font-size:27px;vertical-align:top;position:relative;top:6px;margin-right:5px;color:#cfe7ee;font-weight:300}
+  .g-change{top:361px;font-family:'Exo 2';font-size:18px;font-weight:500}
+  .g-base{top:397px;font-size:11.5px;letter-spacing:.42em;color:#8aa5ad;font-weight:600}
+
+  /* cards */
+  .card{position:absolute;left:528px;width:1015px;height:120px}
+  .card svg.frame{position:absolute;inset:0}
+  .card .accent{position:absolute;left:34px;top:0;width:80px;height:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .card .per{position:absolute;left:34px;top:31px;font-family:'Orbitron';font-weight:600;font-size:31px;line-height:1;
+    background:linear-gradient(180deg,#8be6ff,#45c6ea);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .card.c3 .per{background:linear-gradient(180deg,#d6fff3,#9fe9da);-webkit-background-clip:text;background-clip:text}
+  .card .unit{position:absolute;left:35px;top:79px;font-size:10.5px;letter-spacing:.45em;color:#9cb3ba;font-weight:600}
+  .card .div{position:absolute;left:159px;top:28px;width:1px;height:64px;background:rgba(140,200,215,.18)}
+  .card .val{position:absolute;left:191px;top:18px;font-family:'Exo 2';font-weight:400;font-size:49px;line-height:1;white-space:nowrap;
+    background:linear-gradient(180deg,#a8fff0,#52e6c3);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 10px rgba(80,230,195,.22))}
+  .card .val sup{font-size:27px;vertical-align:top;position:relative;top:4px;margin-right:3px;font-weight:400}
+  .card .val.neg{background:linear-gradient(180deg,#ffb0be,#ff5c7a);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 10px rgba(255,92,122,.2))}
+  .card .chg{position:absolute;left:191px;top:77px;font-family:'Exo 2';font-size:17.5px;font-weight:400;color:#cfeee8;white-space:nowrap}
+  .card .chg b{font-size:12px;margin-right:8px;color:var(--green);font-weight:400}
+  .card .chg.neg b{color:var(--rose)}
+  .card svg.spark{position:absolute;left:434px;top:18px;width:552px;height:86px;overflow:visible}
+
+  /* bottom panel */
+  #panel{position:absolute;left:57px;top:550px;width:1486px;height:291px}
+  #panel svg{position:absolute;inset:0;overflow:visible}
+  .p-title{position:absolute;left:36px;top:24px;font-size:13px;letter-spacing:.5em;font-weight:600;color:#dcecef;display:flex;align-items:center;gap:12px}
+  .p-title i{width:8px;height:8px;background:var(--cyan);transform:rotate(45deg);box-shadow:0 0 6px var(--cyan)}
+  .legend{position:absolute;top:27px;font-size:11.5px;letter-spacing:.32em;font-weight:600;color:#a6bec4;display:flex;align-items:center;gap:10px;white-space:nowrap}
+  .lg-line{width:20px;height:3px;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+  .lg-dash{width:20px;height:0;border-top:2px dashed var(--gold)}
+  .lg-bars{display:flex;gap:2px}.lg-bars s{width:4px;height:12px;background:var(--green)}.lg-bars s+s{background:var(--rose)}
+  .badge{position:absolute;left:1356px;width:90px;height:39px;padding:1px;background:rgba(80,230,180,.5);
+    clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+  .badge div{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Exo 2';font-size:17px;
+    color:#9ff7e2;background:rgba(14,48,46,.92);clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+  .badge.neg{background:rgba(255,92,122,.5)}.badge.neg div{color:#ffb0be;background:rgba(48,16,24,.92)}
+
+  .footer{position:absolute;top:855px;font-size:10px;letter-spacing:.42em;font-weight:600;color:#5f7d85}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+
+  <!-- HEADER -->
+  <svg class="abs" style="left:52px;top:42px" width="54" height="54" viewBox="0 0 54 54">
+    <polygon points="27,2 49,14.5 49,39.5 27,52 5,39.5 5,14.5" fill="rgba(20,60,72,.35)" stroke="#5ad8f5" stroke-width="1.6" opacity=".9"/>
+    <polygon points="27,11 41,19 41,35 27,43 13,35 13,19" fill="none" stroke="#5ad8f5" stroke-width="1.2" opacity=".55"/>
+    <circle cx="27" cy="27" r="7.5" fill="none" stroke="rgba(217,164,65,.35)" stroke-width="3"/>
+    <circle cx="27" cy="27" r="5" fill="#f2b64a" style="filter:drop-shadow(0 0 4px #f2b64a)"/>
+  </svg>
+  <div class="abs brand">FRIDAY</div>
+  <div class="abs brand-sub">PROFIT UPDATE</div>
+
+  <svg id="wave" class="abs" style="left:608px;top:44px" width="384" height="48"></svg>
+
+  <div class="abs pill-wrap" style="left:1194px;top:52px"><div class="pill online"><i></i>ONLINE</div></div>
+  <div class="abs pill-wrap" style="left:1312px;top:52px"><div class="pill clock" id="clock">--</div></div>
+
+  <svg class="abs" style="left:0;top:110px" width="1600" height="10">
+    <line x1="57" y1="5" x2="306" y2="5" stroke="#5ad8f5" stroke-width="1.6" opacity=".75"/>
+    <line x1="306" y1="5" x2="1292" y2="5" stroke="#5ad8f5" stroke-width="1" stroke-dasharray="1 3" opacity=".22"/>
+    <line x1="1292" y1="5" x2="1543" y2="5" stroke="#5ad8f5" stroke-width="1.6" opacity=".75"/>
+    <line x1="767" y1="5" x2="832" y2="5" stroke="#d9a441" stroke-width="3" opacity=".9"/>
+  </svg>
+
+  <!-- GAUGE -->
+  <svg id="gauge" class="abs" style="left:51px;top:113px" width="440" height="440" viewBox="0 0 440 440"></svg>
+  <div class="g-label g-title">PORTFOLIO VALUE</div>
+  <div class="g-label g-value" id="gValue"></div>
+  <div class="g-label g-change" id="gChange"></div>
+  <div class="g-label g-base">BASE $10,000.00</div>
+
+  <!-- CARDS -->
+  <div class="card c1" style="top:138px" data-k="d1"></div>
+  <div class="card c2" style="top:274px" data-k="d30"></div>
+  <div class="card c3" style="top:410px" data-k="d365"></div>
+
+  <!-- PROFIT CURVE -->
+  <div id="panel">
+    <svg id="chart" width="1486" height="291"></svg>
+    <div class="p-title"><i></i>PROFIT CURVE</div>
+    <div class="legend" style="left:1097px"><span class="lg-line"></span>PORTFOLIO</div>
+    <div class="legend" style="left:1227px"><span class="lg-dash"></span>BASE $10K</div>
+    <div class="legend" style="left:1356px"><span class="lg-bars"><s></s><s></s></span>DAILY P&amp;L</div>
+    <div class="badge" id="badge"><div></div></div>
+  </div>
+
+  <div class="footer" style="left:57px">FRIDAY · PRIVATE CHANNEL</div>
+  <div class="footer" style="right:57px;letter-spacing:.42em;margin-right:-.42em">SAMPLE REPORT</div>
+</div></div>
+
+<script>
+/* =====================================================================
+   FRIDAY PROFIT SIMULATION
+   $10,000 start → $1,000,000 target over 18 months (19 Nov 2026 → 19 May 2028, SGT).
+   The whole path is generated from a fixed seed, so every visitor and every reload
+   sees the same numbers. Not every month is a profit month (see monthPlan).
+   ===================================================================== */
+const DAY = 86400000, HOUR = 3600000, SGT = 8 * HOUR;
+const CONFIG = {
+  startBalance: 10000,
+  targetBalance: 1000000,
+  start: Date.UTC(2026, 10, 18, 16, 0, 0),   // 19 Nov 2026 00:00 SGT
+  end:   Date.UTC(2028, 4, 18, 16, 0, 0),    // 19 May 2028 00:00 SGT (1.5 years)
+  seed: 20261119,
+  // Planned return per calendar month (%). Negative = losing month.
+  // Positive months are scaled together so the path lands exactly on the target.
+  monthPlan: {
+    '2026-11': 6,  '2026-12': 11, '2027-01': -5.5, '2027-02': 16, '2027-03': 21, '2027-04': -8,
+    '2027-05': 27, '2027-06': 31, '2027-07': 24,  '2027-08': -11, '2027-09': 36, '2027-10': 40,
+    '2027-11': 29, '2027-12': -6, '2028-01': 44,  '2028-02': 38, '2028-03': -4, '2028-04': 47,
+    '2028-05': 30
+  }
+};
+
+/* ---------- seeded path ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const SIM = (function build(){
+  const rnd = mulberry32(CONFIG.seed);
+  const gauss = () => { let u = 0; while (!u) u = rnd(); const v = rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const D = Math.round((CONFIG.end - CONFIG.start) / DAY);
+  const keyOf = d => { const x = new Date(CONFIG.start + d*DAY + SGT); return x.getUTCFullYear()+'-'+String(x.getUTCMonth()+1).padStart(2,'0'); };
+  const segs = [];
+  for (let d = 0; d < D; d++) { const k = keyOf(d); if (!segs.length || segs[segs.length-1].key !== k) segs.push({key:k, days:[]}); segs[segs.length-1].days.push(d); }
+  segs.forEach(s => { const [y,m] = s.key.split('-').map(Number); const dim = new Date(Date.UTC(y,m,0)).getUTCDate();
+    s.raw = Math.log(1 + (CONFIG.monthPlan[s.key] ?? 10)/100) * s.days.length / dim; });
+  const total = Math.log(CONFIG.targetBalance / CONFIG.startBalance);
+  const neg = segs.filter(s => s.raw < 0).reduce((a,s) => a + s.raw, 0);
+  const pos = segs.filter(s => s.raw > 0).reduce((a,s) => a + s.raw, 0);
+  const k = (total - neg) / pos;
+  const lr = new Array(D);
+  segs.forEach(s => {
+    s.L = s.raw > 0 ? s.raw * k : s.raw;
+    const n = s.days.length, drift = s.L / n, sig = 0.011 + Math.abs(drift);
+    const z = s.days.map(() => Math.max(-3, Math.min(3, gauss())) * sig);
+    const mean = z.reduce((a,b) => a + b, 0) / n;
+    s.days.forEach((d,i) => lr[d] = drift + z[i] - mean);
+  });
+  const closes = []; let c = Math.log(CONFIG.startBalance);
+  for (let d = 0; d < D; d++) { c += lr[d]; closes.push(c); }
+  closes[D-1] = Math.log(CONFIG.targetBalance);
+  return { D, closes };
+})();
+
+/* intraday movement: deterministic in time, zero at each daily close */
+function hash(n){ n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return ((n ^ (n >>> 16)) >>> 0) / 4294967296 * 2 - 1; }
+function vnoise(t, step, salt){ const i = Math.floor(t/step), f = t/step - i, s = f*f*(3-2*f); return hash(i*7919+salt)*(1-s) + hash((i+1)*7919+salt)*s; }
+function wiggle(t, smooth){
+  const m = t / 60000;
+  const w = 0.0032*Math.sin(m/97*2*Math.PI+1.3) + 0.0026*Math.sin(m/233*2*Math.PI+0.4) + 0.0018*Math.sin(m/521*2*Math.PI+2.2);
+  return smooth ? w : w + 0.0012*vnoise(t, 240000, 11) + 0.0005*vnoise(t, 15000, 29);
+}
+function logClose(d){ return d < 0 ? Math.log(CONFIG.startBalance) : SIM.closes[Math.min(d, SIM.D-1)]; }
+function valueAt(t, smooth){
+  if (t <= CONFIG.start) return CONFIG.startBalance;
+  if (t >= CONFIG.end) return CONFIG.targetBalance;
+  const x = (t - CONFIG.start) / DAY, d = Math.floor(x), f = x - d;
+  const a = logClose(d-1), b = logClose(d);
+  return Math.exp(a + (b - a)*f + wiggle(t, smooth)*Math.sin(Math.PI*f));
+}
+function dayIndex(t){ return Math.floor((t - CONFIG.start) / DAY); }
+
+/* ---------- formatting ---------- */
+const fmt2 = v => Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+function fmtAxis(v, step){
+  if (step < 100) return '$' + Math.round(v).toLocaleString('en-US');
+  const unit = v >= 1e6 && step >= 1e5 ? 1e6 : 1e3, dec = Math.max(0, Math.ceil(-Math.log10(step/unit) - 1e-9));
+  return '$' + (v/unit).toFixed(dec) + (unit === 1e6 ? 'M' : 'K');
+}
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs={}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+/* ---------- scaling ---------- */
+function fit(){ const s = Math.min(innerWidth/1600, innerHeight/900); document.getElementById('stage').style.transform = `scale(${s})`; }
+addEventListener('resize', fit); fit();
+
+/* ---------- waveform ---------- */
+const wave = document.getElementById('wave'), WBARS = 78, wbars = [];
+const wrnd = mulberry32(7);
+for (let i = 0; i < WBARS; i++) {
+  const p = i/(WBARS-1), env = Math.pow(Math.sin(Math.PI*p), 2.2);
+  const base = 2 + env*(18 + wrnd()*26);
+  wbars.push({ base, ph: wrnd()*6.28, sp: .6 + wrnd()*1.4, r: el('rect', {x: i*4.92, width: env > .08 ? 2 : 1.6, rx: .8, fill:'#5ad8f5'}, wave) });
+}
+function animWave(ts){
+  wbars.forEach(b => { const h = Math.max(1.6, b.base*(.78 + .22*Math.sin(ts/1000*b.sp*2 + b.ph))); b.r.setAttribute('y', 24 - h/2); b.r.setAttribute('height', h); b.r.setAttribute('opacity', Math.min(1, .35 + h/34)); });
+  requestAnimationFrame(animWave);
+}
+requestAnimationFrame(animWave);
+
+/* ---------- gauge ---------- */
+const gauge = document.getElementById('gauge'), GC = 220;
+const defs = el('defs', {}, gauge);
+const glow = el('filter', {id:'glow', x:'-50%', y:'-50%', width:'200%', height:'200%'}, defs);
+el('feGaussianBlur', {stdDeviation:'3.2', result:'b'}, glow);
+const fm = el('feMerge', {}, glow); el('feMergeNode', {in:'b'}, fm); el('feMergeNode', {in:'SourceGraphic'}, fm);
+const pt = (r, deg) => [GC + r*Math.sin(deg*Math.PI/180), GC - r*Math.cos(deg*Math.PI/180)];
+function arcD(r, a0, a1){ // degrees clockwise from 12 o'clock
+  if (Math.abs(a1 - a0) >= 359.9) { const [x,y] = pt(r,0), [x2,y2] = pt(r,180); return `M${x},${y}A${r},${r} 0 1 1 ${x2},${y2}A${r},${r} 0 1 1 ${x},${y}`; }
+  const [x0,y0] = pt(r,a0), [x1,y1] = pt(r,a1), large = Math.abs(a1-a0) > 180 ? 1 : 0, sweep = a1 > a0 ? 1 : 0;
+  return `M${x0},${y0}A${r},${r} 0 ${large} ${sweep} ${x1},${y1}`;
+}
+el('circle', {cx:GC, cy:GC, r:216, fill:'none', stroke:'rgba(90,216,245,.06)'}, gauge);
+el('circle', {cx:GC, cy:GC, r:190, fill:'none', stroke:'rgba(90,216,245,.08)'}, gauge);
+[[20,64],[112,142],[200,250]].forEach(([a,b]) => el('path', {d:arcD(186,a,b), fill:'none', stroke:'rgba(160,225,240,.55)', 'stroke-width':1.2}, gauge));
+for (let a = 0; a < 360; a += 3) {
+  const major = a % 30 === 0, [x0,y0] = pt(major ? 168 : 174, a), [x1,y1] = pt(179, a);
+  el('line', {x1:x0, y1:y0, x2:x1, y2:y1, stroke: major ? 'rgba(170,230,240,.75)' : 'rgba(120,200,215,.22)', 'stroke-width': major ? 1.6 : 1}, gauge);
+}
+[[0,185,197],[180,185,197],[90,184,196],[270,184,196],[90,118,126],[270,118,126]].forEach(([a,r0,r1]) => { const [x0,y0]=pt(r0,a),[x1,y1]=pt(r1,a); el('line',{x1:x0,y1:y0,x2:x1,y2:y1,stroke:'rgba(170,230,240,.7)','stroke-width':1.5},gauge); });
+el('circle', {cx:GC, cy:GC, r:132, fill:'rgba(6,22,28,.55)', stroke:'rgba(90,216,245,.14)'}, gauge);
+el('circle', {cx:GC, cy:GC, r:121, fill:'none', stroke:'rgba(120,200,215,.25)', 'stroke-dasharray':'1 4'}, gauge);
+const RINGS = [
+  {k:'d365', r:165, w:9,   col:'#3ef0a8', lab:'365D'},
+  {k:'d30',  r:151, w:7,   col:'#4fd6ff', lab:'30D'},
+  {k:'d1',   r:139, w:5.5, col:'#e8f6ff', lab:'24H'}
+];
+RINGS.forEach(R => {
+  el('circle', {cx:GC, cy:GC, r:R.r, fill:'none', stroke:'rgba(255,255,255,.045)', 'stroke-width':R.w}, gauge);
+  R.path = el('path', {fill:'none', 'stroke-width':R.w, 'stroke-linecap':'round', filter:'url(#glow)'}, gauge);
+  R.dot = el('circle', {r:R.w/2 + 1.2, fill:'#071419', stroke:'#fff', 'stroke-width':1.6}, gauge);
+  const t = el('text', {x:GC-8, y:GC-R.r+3.5, 'text-anchor':'end', fill:R.col, 'font-family':'Orbitron', 'font-weight':600, 'font-size':9.5, 'letter-spacing':'.5'}, gauge);
+  t.textContent = R.lab;
+});
+const RING_DEG_PER_PCT = 12, RING_MAX_DEG = 300; // 1% = 12° of arc; arcs stop before the label gap
+
+/* ---------- cards ---------- */
+const CARD_META = { d1:['24H','HOURS'], d30:['30D','DAYS'], d365:['365D','DAYS'] };
+document.querySelectorAll('.card').forEach(c => {
+  const k = c.dataset.k, hi = k === 'd365', W = 1015, H = 120, ch = 22;
+  c.innerHTML = `<svg class="frame" width="${W}" height="${H}"><polygon points="${ch},0.5 ${W-.5},0.5 ${W-.5},${H-ch} ${W-ch},${H-.5} 0.5,${H-.5} 0.5,${ch}"
+      fill="${hi ? 'rgba(30,82,70,.42)' : 'rgba(18,46,56,.5)'}" stroke="${hi ? 'rgba(80,230,170,.5)' : 'rgba(90,200,220,.26)'}" stroke-width="1"/></svg>
+    <div class="accent"></div><div class="per">${CARD_META[k][0]}</div><div class="unit">${CARD_META[k][1]}</div><div class="div"></div>
+    <div class="val"></div><div class="chg"></div><svg class="spark" viewBox="0 0 552 86"></svg>`;
+});
+
+function sparkline(svg, pts, colA, colB, id){
+  svg.innerHTML = '';
+  const W = 552, H = 86, top = 6, bot = 74;
+  const vs = pts.map(p => p[1]), mn = Math.min(...vs), mx = Math.max(...vs), rng = (mx - mn) || 1;
+  const xy = pts.map((p,i) => [i/(pts.length-1)*(W-14), bot - (p[1]-mn)/rng*(bot-top)]);
+  const d = smoothPath(xy);
+  const df = el('defs', {}, svg);
+  const lg = el('linearGradient', {id:'l'+id, x1:0, x2:1, y1:0, y2:0}, df); el('stop',{offset:0,'stop-color':colA},lg); el('stop',{offset:1,'stop-color':colB},lg);
+  const ag = el('linearGradient', {id:'a'+id, x1:0, x2:0, y1:0, y2:1}, df); el('stop',{offset:0,'stop-color':colB,'stop-opacity':.22},ag); el('stop',{offset:1,'stop-color':colB,'stop-opacity':0},ag);
+  el('line', {x1:0, y1:82, x2:W, y2:82, stroke:'rgba(140,200,215,.12)'}, svg);
+  for (let i = 1; i < 8; i++) el('line', {x1:i*W/8, y1:80, x2:i*W/8, y2:84, stroke:'rgba(140,200,215,.25)'}, svg);
+  el('path', {d: d + `L${xy[xy.length-1][0]},82L0,82Z`, fill:`url(#a${id})`}, svg);
+  el('path', {d, fill:'none', stroke:`url(#l${id})`, 'stroke-width':2.2, style:'filter:drop-shadow(0 0 4px '+colB+')'}, svg);
+  const [ex,ey] = xy[xy.length-1];
+  el('circle', {cx:ex, cy:ey, r:8, fill:'rgba(255,255,255,.12)'}, svg);
+  el('circle', {cx:ex, cy:ey, r:3.6, fill:'#fff', style:'filter:drop-shadow(0 0 4px #fff)'}, svg);
+}
+function smoothPath(p){
+  let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for (let i = 1; i < p.length; i++) {
+    const p0 = p[i-2] || p[i-1], p1 = p[i-1], p2 = p[i], p3 = p[i+1] || p2;
+    const c1 = [p1[0] + (p2[0]-p0[0])/6, p1[1] + (p2[1]-p0[1])/6], c2 = [p2[0] - (p3[0]-p1[0])/6, p2[1] - (p3[1]-p1[1])/6];
+    d += `C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+function samples(t0, t1, n){ const out = []; for (let i = 0; i < n; i++) { const t = t0 + (t1 - t0)*i/(n-1); out.push([t, i === n-1 ? valueAt(t) : valueAt(t, true)]); } return out; }
+// daily closes between t0 and t1 (plus both ends) — used for the longer views
+function series(t0, t1){
+  if (t1 - t0 <= 6*DAY) return samples(t0, t1, 120);
+  const out = [[t0, valueAt(t0, true)]];
+  for (let d = Math.floor((t0 - CONFIG.start)/DAY) + 1; CONFIG.start + d*DAY < t1; d++) out.push([CONFIG.start + d*DAY, Math.exp(logClose(d-1))]);
+  out.push([t1, valueAt(t1)]);
+  return out;
+}
+
+/* ---------- profit curve ---------- */
+const chart = document.getElementById('chart');
+const PX0 = 86, PX1 = 1327, PY0 = 66, PY1 = 196, BAR_Y = 226, AXIS_Y = 253;
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+function sgtDate(t){ const x = new Date(t + SGT); return {y:x.getUTCFullYear(), m:x.getUTCMonth(), d:x.getUTCDate()}; }
+
+function drawChart(now){
+  chart.innerHTML = '';
+  const W = 1486, H = 291;
+  // frame
+  el('polygon', {points:`0.5,12 12,0.5 ${W-240},0.5 ${W-226},12 ${W-.5},12 ${W-.5},${H-28} ${W-28},${H-.5} 0.5,${H-.5}`,
+    fill:'rgba(12,34,42,.5)', stroke:'rgba(90,200,220,.25)'}, chart);
+  const df = el('defs', {}, chart);
+  const ag = el('linearGradient', {id:'cArea', x1:0, x2:0, y1:0, y2:1}, df);
+  el('stop',{offset:0,'stop-color':'#3ef0b0','stop-opacity':.32},ag); el('stop',{offset:1,'stop-color':'#3ef0b0','stop-opacity':.02},ag);
+  const bx = el('linearGradient', {id:'cBox', x1:0, x2:0, y1:0, y2:1}, df);
+  el('stop',{offset:0,'stop-color':'#5ad8f5','stop-opacity':.07},bx); el('stop',{offset:1,'stop-color':'#5ad8f5','stop-opacity':0},bx);
+
+  const t0 = CONFIG.start, t1 = Math.max(Math.min(now, CONFIG.end), t0 + HOUR);
+  const pts = series(t0, t1);
+  let mn = Math.min(CONFIG.startBalance, ...pts.map(p => p[1])), mx = Math.max(...pts.map(p => p[1]));
+  const span = mx - mn || mx*0.01; mn -= span*.08; mx += span*.1;
+  const X = t => PX0 + (t - t0)/(t1 - t0)*(PX1 - PX0);
+  const Y = v => PY1 - (v - mn)/(mx - mn)*(PY1 - PY0);
+
+  // y ticks
+  const raw = (mx - mn)/3, mag = Math.pow(10, Math.floor(Math.log10(raw))), nf = raw/mag;
+  const step = (nf < 1.5 ? 1 : nf < 3.5 ? 2 : nf < 7.5 ? 5 : 10)*mag;
+  for (let v = Math.ceil(mn/step)*step; v <= mx; v += step) {
+    const y = Y(v);
+    el('line', {x1:PX0, y1:y, x2:PX1, y2:y, stroke:'rgba(140,200,215,.07)', 'stroke-dasharray':'2 5'}, chart);
+    if (Math.abs(v - CONFIG.startBalance) < step*.3) continue;
+    const t = el('text', {x:72, y:y+4.5, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Exo 2', 'font-size':13}, chart); t.textContent = fmtAxis(v, step);
+  }
+  const yb = Y(CONFIG.startBalance);
+  el('line', {x1:PX0, y1:yb, x2:PX1, y2:yb, stroke:'#d9a441', 'stroke-width':1.3, 'stroke-dasharray':'6 6', opacity:.75}, chart);
+  el('text', {x:72, y:yb+4.5, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Exo 2', 'font-size':13}, chart).textContent = fmtAxis(CONFIG.startBalance, step);
+
+  // 30D window
+  const w0 = Math.max(t0, t1 - 30*DAY), xw = X(w0), xe = X(t1);
+  el('rect', {x:xw, y:PY0-6, width:xe-xw, height:PY1-PY0+6, fill:'url(#cBox)'}, chart);
+  el('line', {x1:xw, y1:PY0-6, x2:xe, y2:PY0-6, stroke:'rgba(90,216,245,.3)'}, chart);
+  el('line', {x1:xw, y1:PY0-6, x2:xw, y2:PY1, stroke:'rgba(90,216,245,.12)'}, chart);
+  el('line', {x1:xe, y1:PY0-6, x2:xe, y2:AXIS_Y, stroke:'rgba(160,225,240,.4)', 'stroke-dasharray':'2 3'}, chart);
+  const lab = el('text', {x:xw + (xe-xw)*.5, y:PY0+9, 'text-anchor':'middle', fill:'#bfe9f2', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':11, 'letter-spacing':'3'}, chart);
+  lab.textContent = '30D •';
+
+  const xy = pts.map(p => [X(p[0]), Y(p[1])]);
+  const split = Math.max(1, xy.findIndex(p => p[0] >= xw));
+  const older = xy.slice(0, split + 1), recent = xy.slice(split);
+  if (older.length > 1 && xw > PX0 + 1) el('path', {d:smoothPath(older), fill:'none', stroke:'#5fd8ff', 'stroke-width':2.2, style:'filter:drop-shadow(0 0 5px rgba(95,216,255,.8))'}, chart);
+  if (recent.length > 1) {
+    el('path', {d:smoothPath(recent) + `L${recent[recent.length-1][0]},${PY1}L${recent[0][0]},${PY1}Z`, fill:'url(#cArea)'}, chart);
+    el('path', {d:smoothPath(recent), fill:'none', stroke:'#4ef2b8', 'stroke-width':2.4, style:'filter:drop-shadow(0 0 6px rgba(62,240,168,.85))'}, chart);
+  }
+  // particles
+  const pr = mulberry32(99);
+  for (let i = 0; i < 26; i++) { const x = xw + pr()*(xe - xw), yy = PY0 + pr()*(PY1 - PY0)*.55; el('circle', {cx:x, cy:yy, r: .6 + pr()*1.1, fill:'#9fe9f5', opacity:.15 + pr()*.4}, chart); }
+
+  // end marker
+  const [ex, ey] = xy[xy.length-1];
+  el('circle', {cx:ex, cy:ey, r:15, fill:'none', stroke:'rgba(160,225,240,.35)'}, chart);
+  el('circle', {cx:ex, cy:ey, r:9, fill:'rgba(10,30,36,.7)', stroke:'#e9fbff', 'stroke-width':1.6}, chart);
+  el('circle', {cx:ex, cy:ey, r:4, fill:'#fff', style:'filter:drop-shadow(0 0 5px #fff)'}, chart);
+
+  // daily P&L bars
+  const dNow = Math.min(dayIndex(t1 - 1), SIM.D - 1), nDays = dNow + 1;
+  const pnl = [];
+  for (let d = 0; d <= dNow; d++) { const prev = Math.exp(logClose(d-1)); const cur = d === dNow ? valueAt(t1) : Math.exp(logClose(d)); pnl.push(cur - prev); }
+  const maxAbs = Math.max(...pnl.map(Math.abs)) || 1;
+  const slot = (PX1 - PX0) * DAY / (t1 - t0), bw = Math.max(1.2, Math.min(9, slot*.55));
+  pnl.forEach((v,d) => {
+    const xc = Math.min(PX1 - bw/2, X(Math.min(t0 + (d+.5)*DAY, t1))), h = Math.max(1.5, Math.abs(v)/maxAbs*22);
+    el('rect', {x:xc - bw/2, y: v >= 0 ? BAR_Y - h : BAR_Y, width:bw, height:h, fill: v >= 0 ? '#3ee8a8' : '#e2506e', opacity:.88}, chart);
+  });
+  el('line', {x1:PX0, y1:BAR_Y, x2:PX1, y2:BAR_Y, stroke:'rgba(140,200,215,.1)'}, chart);
+  el('text', {x:72, y:BAR_Y+4, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':10.5, 'letter-spacing':'2.5'}, chart).textContent = 'DAILY';
+
+  // x axis
+  el('line', {x1:PX0, y1:AXIS_Y, x2:PX1, y2:AXIS_Y, stroke:'rgba(140,200,215,.3)'}, chart);
+  const lbl = (x, s, anchor) => { const t = el('text', {x, y:AXIS_Y+22, 'text-anchor':anchor, fill:'#a9c0c6', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':12.5, 'letter-spacing':'3'}, chart); t.textContent = s; };
+  const tick = x => el('line', {x1:x, y1:AXIS_Y, x2:x, y2:AXIS_Y+6, stroke:'rgba(140,200,215,.45)'}, chart);
+  const sd = sgtDate(t0), nd = sgtDate(t1);
+  tick(PX0); lbl(PX0, `${sd.d} ${MON[sd.m]}`, 'start');
+  const endX = X(t1), placed = [PX0];
+  if (endX - PX0 > 90) { tick(endX); lbl(endX, `${nd.d} ${MON[nd.m]}`, 'end'); }
+  let y = sd.y, m = sd.m + 1;
+  while (true) {
+    if (m > 11) { m = 0; y++; }
+    const tm = Date.UTC(y, m, 1) - SGT; if (tm >= t1) break;
+    const x = X(tm); tick(x);
+    const mid = X(Math.min(t1, tm + 15*DAY)); if (mid < endX - 4) el('line', {x1:mid, y1:AXIS_Y, x2:mid, y2:AXIS_Y+4, stroke:'rgba(140,200,215,.25)'}, chart);
+    if (x - placed[placed.length-1] > 62 && endX - x > 95) { lbl(x, m === 0 ? `JAN '${String(y).slice(2)}` : MON[m], 'middle'); placed.push(x); }
+    m++;
+  }
+
+  // badge
+  const pct = (valueAt(t1)/CONFIG.startBalance - 1)*100, badge = document.getElementById('badge');
+  badge.style.top = Math.max(42, Math.min(ey - 20, 200)) + 'px';
+  badge.className = 'badge' + (pct < 0 ? ' neg' : '');
+  badge.firstChild.textContent = (pct >= 0 ? '+' : '−') + fmt2(pct) + '%';
+}
+
+/* ---------- live update ---------- */
+const clockFmt = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Singapore', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
+function periodChange(now, span){
+  const ref = valueAt(Math.max(CONFIG.start, now - span)), cur = valueAt(now);
+  return { abs: cur - ref, pct: (cur/ref - 1)*100 };
+}
+function setCard(k, ch, spark){
+  const c = document.querySelector(`.card[data-k="${k}"]`), neg = ch.abs < -0.004;
+  const v = c.querySelector('.val'); v.className = 'val' + (neg ? ' neg' : '');
+  v.innerHTML = `<sup>${neg ? '−' : '+'}$</sup>${fmt2(ch.abs)}`;
+  const g = c.querySelector('.chg'); g.className = 'chg' + (neg ? ' neg' : '');
+  g.innerHTML = `<b>${neg ? '▼' : '▲'}</b>${fmt2(ch.pct)}%`;
+  if (spark) sparkline(c.querySelector('.spark'), spark, k === 'd1' ? '#4fd6ff' : '#4fd6ff', k === 'd1' ? '#5ee0ff' : '#3ef0b0', k);
+}
+function setRing(R, pct){
+  const deg = Math.max(1.5, Math.min(RING_MAX_DEG, Math.abs(pct)*RING_DEG_PER_PCT));
+  R.path.setAttribute('d', arcD(R.r, 0, deg));
+  R.path.setAttribute('stroke', pct < 0 ? '#ff5c7a' : R.col);
+  const [x,y] = pt(R.r, deg); R.dot.setAttribute('cx', x); R.dot.setAttribute('cy', y);
+}
+
+let lastHeavy = 0;
+function tick(){
+  const now = Date.now();
+  document.getElementById('clock').textContent = clockFmt.format(now).replace(',', '').toUpperCase().replace(/ (\d\d:\d\d)$/, ' · $1') + ' SGT';
+  const t = Math.min(now, CONFIG.end), val = valueAt(t), all = val - CONFIG.startBalance, allPct = (val/CONFIG.startBalance - 1)*100;
+  const gv = document.getElementById('gValue'); gv.style.fontSize = fmt2(val).length >= 12 ? '41px' : '52px';
+  gv.innerHTML = `<sup>$</sup>${fmt2(val)}`;
+  const gc = document.getElementById('gChange'), neg = all < -0.004;
+  gc.style.color = neg ? '#ff5c7a' : '#3ef0a8';
+  gc.textContent = `${neg ? '▼' : '▲'}  ${neg ? '−' : '+'}$${fmt2(all)} · ${fmt2(allPct)}%`;
+
+  const ch = { d1: periodChange(now, DAY), d30: periodChange(now, 30*DAY), d365: periodChange(now, 365*DAY) };
+  const heavy = now - lastHeavy > 5000;
+  const s0 = CONFIG.start, te = Math.max(Math.min(now, CONFIG.end), s0 + 60000);
+  setCard('d1',  ch.d1,  heavy && samples(Math.max(s0, te - DAY), te, 49));
+  setCard('d30', ch.d30, heavy && series(Math.max(s0, te - 30*DAY), te));
+  setCard('d365',ch.d365,heavy && series(Math.max(s0, te - 365*DAY), te));
+  RINGS.forEach(R => setRing(R, ch[R.k].pct));
+  if (heavy) { drawChart(now); lastHeavy = now; }
+}
+document.fonts && document.fonts.ready.then(tick);
+tick(); setInterval(tick, 2000);
+</script>
+</body>
+</html>
