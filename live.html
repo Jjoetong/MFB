@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRIDAY | Profit Update</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500&family=Orbitron:wght@500;600&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#061217; --cyan:#5ad8f5; --mint:#7ff2d6; --green:#3ef0a8; --rose:#ff5c7a;
+    --gold:#d9a441; --dim:#7f9aa2; --text:#e4f3f6; --line:rgba(90,216,245,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(ellipse at 20% 40%,#0c2229 0%,#071419 55%,#050e12 100%)}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;
+    background:
+      radial-gradient(ellipse at 18% 38%,rgba(40,120,130,.18) 0%,transparent 45%),
+      linear-gradient(180deg,#0a1c22 0%,#081619 60%,#071317 100%)}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px)}
+  .beams{position:absolute;top:0;left:-200px;width:2000px;height:900px;pointer-events:none;
+    background:
+      linear-gradient(112deg,transparent 0 34%,rgba(120,210,225,.035) 34% 47%,transparent 47% 100%),
+      linear-gradient(112deg,transparent 0 58%,rgba(120,210,225,.03) 58% 66%,transparent 66% 100%);
+    animation:beams 24s ease-in-out infinite alternate}
+  @keyframes beams{from{transform:translateX(0)}to{transform:translateX(160px)}}
+  .sweep{position:absolute;top:0;left:-260px;width:220px;height:900px;pointer-events:none;z-index:4;
+    background:linear-gradient(90deg,transparent,rgba(130,225,245,.045),transparent);animation:sweep 12s linear 3s infinite}
+  @keyframes sweep{to{transform:translateX(2120px)}}
+  .abs{position:absolute}
+  .corner{position:absolute;width:37px;height:37px;border-color:rgba(120,190,205,.55);border-style:solid;border-width:0}
+  .c-tl{left:19px;top:19px;border-left-width:2px;border-top-width:2px}
+  .c-tr{right:19px;top:19px;border-right-width:2px;border-top-width:2px}
+  .c-bl{left:19px;bottom:19px;border-left-width:2px;border-bottom-width:2px}
+  .c-br{right:19px;bottom:19px;border-right-width:2px;border-bottom-width:2px}
+
+  /* boot sequence */
+  .boot{animation:boot .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+  @keyframes boot{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .corner{animation:cornerIn .8s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes cornerIn{from{opacity:0;width:0;height:0}}
+
+  /* header */
+  .brand{left:118px;top:40px;font-family:'Rajdhani';font-weight:600;font-size:33px;letter-spacing:.62em;color:#eaf6f8;line-height:1}
+  .brand span{display:inline-block;animation:letter .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.15s + var(--i) * .08s)}
+  @keyframes letter{from{opacity:0;transform:translateY(-8px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+  .brand-sub{left:119px;top:85px;font-family:'Rajdhani';font-weight:600;font-size:11px;letter-spacing:.55em;color:var(--gold);line-height:1}
+  .logo .core{animation:corePulse 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes corePulse{50%{transform:scale(.82);filter:drop-shadow(0 0 9px #f2b64a)}}
+  .logo .hex-in{transform-box:fill-box;transform-origin:center;animation:spin 30s linear infinite}
+  .pill{height:34px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani';font-weight:600;
+    clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+    background:linear-gradient(180deg,rgba(26,62,72,.55),rgba(14,38,46,.55))}
+  .pill-wrap{padding:1px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));background:rgba(90,216,245,.32)}
+  .online{width:105px;font-size:14.5px;letter-spacing:.2em;color:#4ff0c0;gap:7px}
+  .online i{width:8px;height:8px;border-radius:50%;background:#3ef0a8;box-shadow:0 0 8px #3ef0a8;animation:blink 2.4s ease-in-out infinite}
+  .clock{width:231px;font-size:15px;letter-spacing:.17em;color:#e0eef2}
+  .clock b{font-weight:600;animation:colon 2s steps(1) infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  @keyframes colon{50%{opacity:.2}}
+  .gold-acc{left:767px;top:113px;width:65px;height:3px;background:#d9a441;box-shadow:0 0 8px rgba(217,164,65,.7);animation:glide 7s ease-in-out infinite alternate}
+  @keyframes glide{from{transform:translateX(-26px)}to{transform:translateX(26px)}}
+  .hl-pulse{left:306px;top:114px;width:90px;height:1px;background:linear-gradient(90deg,transparent,rgba(160,235,255,.9),transparent);animation:hl 6s ease-in-out 2s infinite;opacity:0}
+  @keyframes hl{0%{transform:translateX(0);opacity:0}10%{opacity:1}60%{transform:translateX(900px);opacity:1}70%,100%{transform:translateX(900px);opacity:0}}
+
+  /* gauge */
+  .radar{position:absolute;left:139px;top:201px;width:264px;height:264px;border-radius:50%;pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 280deg,rgba(90,216,245,.07) 340deg,rgba(150,235,255,.16) 360deg);
+    -webkit-mask:radial-gradient(circle,rgba(0,0,0,.35) 0 52%,#000 70%);mask:radial-gradient(circle,rgba(0,0,0,.35) 0 52%,#000 70%);
+    animation:spin 8s linear infinite}
+  .g-label{position:absolute;left:0;width:542px;text-align:center;line-height:1}
+  .g-title{top:262px;font-size:11.5px;letter-spacing:.45em;color:#a9c0c6;font-weight:600}
+  .g-value{top:292px;font-family:'Exo 2';font-weight:400;font-size:52px;color:#f2fbfc;letter-spacing:.01em;text-shadow:0 0 18px rgba(130,220,240,.25)}
+  .g-value sup{font-size:27px;vertical-align:top;position:relative;top:6px;margin-right:5px;color:#cfe7ee;font-weight:300}
+  .g-value.flash-up{animation:gUp .9s ease-out}.g-value.flash-dn{animation:gDn .9s ease-out}
+  @keyframes gUp{from{text-shadow:0 0 28px rgba(62,240,168,.95);color:#d8fff0}}
+  @keyframes gDn{from{text-shadow:0 0 28px rgba(255,92,122,.95);color:#ffe0e6}}
+  .g-change{top:361px;font-family:'Exo 2';font-size:18px;font-weight:500}
+  .g-change.pre{font-family:'Rajdhani';font-weight:600;letter-spacing:.28em;font-size:16px;color:var(--gold)}
+  .g-base{top:397px;font-size:11.5px;letter-spacing:.42em;color:#8aa5ad;font-weight:600}
+  .goal-head{position:absolute;font-family:'Rajdhani';font-weight:600;font-size:8.5px;letter-spacing:.16em;color:#d9a441;white-space:nowrap;opacity:.95}
+  .spin{transform-box:view-box;transform-origin:220px 220px;animation:spin 90s linear infinite}
+  .spin-rev{transform-box:view-box;transform-origin:220px 220px;animation:spin 60s linear infinite reverse}
+  .orbit{transform-box:view-box;transform-origin:220px 220px;animation:spin 14s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ripple{transform-box:fill-box;transform-origin:center;animation:ripple 2.4s ease-out infinite}
+  .ripple.r2{animation-delay:1.2s}
+  @keyframes ripple{from{transform:scale(.5);opacity:.9}to{transform:scale(2.8);opacity:0}}
+
+  /* cards */
+  .card{position:absolute;left:528px;width:1015px;height:120px}
+  .card svg.frame{position:absolute;inset:0}
+  .card .accent{position:absolute;left:34px;top:0;width:80px;height:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .card .streak{position:absolute;left:22px;top:0;width:993px;height:2px;overflow:hidden;pointer-events:none}
+  .card .streak i{position:absolute;top:0;left:-160px;width:160px;height:1px;background:linear-gradient(90deg,transparent,rgba(170,240,255,.95),transparent);animation:streak 8s ease-in-out infinite;animation-delay:var(--sd)}
+  @keyframes streak{0%{transform:translateX(0)}40%,100%{transform:translateX(1160px)}}
+  .card .per{position:absolute;left:34px;top:31px;font-family:'Orbitron';font-weight:600;font-size:31px;line-height:1;
+    background:linear-gradient(180deg,#8be6ff,#45c6ea);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .card.c3 .per{background:linear-gradient(180deg,#d6fff3,#9fe9da);-webkit-background-clip:text;background-clip:text}
+  .card .unit{position:absolute;left:35px;top:79px;font-size:10.5px;letter-spacing:.45em;color:#9cb3ba;font-weight:600}
+  .card .div{position:absolute;left:159px;top:28px;width:1px;height:64px;background:rgba(140,200,215,.18)}
+  .card .val{position:absolute;left:191px;top:18px;font-family:'Exo 2';font-weight:400;font-size:49px;line-height:1;white-space:nowrap;
+    background:linear-gradient(180deg,#a8fff0,#52e6c3);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 10px rgba(80,230,195,.22))}
+  .card .val sup{font-size:27px;vertical-align:top;position:relative;top:4px;margin-right:3px;font-weight:400}
+  .card .val.neg{background:linear-gradient(180deg,#ffb0be,#ff5c7a);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 10px rgba(255,92,122,.2))}
+  .card .val.flash-up{animation:cUp .9s ease-out}.card .val.flash-dn{animation:cDn .9s ease-out}
+  @keyframes cUp{from{filter:brightness(1.7) drop-shadow(0 0 16px rgba(62,240,168,.95))}}
+  @keyframes cDn{from{filter:brightness(1.5) drop-shadow(0 0 16px rgba(255,92,122,.95))}}
+  .card .chg{position:absolute;left:191px;top:77px;font-family:'Exo 2';font-size:17.5px;font-weight:400;color:#cfeee8;white-space:nowrap}
+  .card .chg b{font-size:12px;margin-right:8px;color:var(--green);font-weight:400;display:inline-block}
+  .card .chg.neg b{color:var(--rose)}
+  .card .chg b.bump{animation:bump .6s ease-out}
+  @keyframes bump{40%{transform:translateY(-3px) scale(1.25)}}
+  .card svg.spark{position:absolute;left:434px;top:18px;width:552px;height:86px;overflow:visible}
+
+  /* bottom panel */
+  #panel{position:absolute;left:57px;top:550px;width:1486px;height:291px}
+  #panel svg{position:absolute;inset:0;overflow:visible}
+  .p-title{position:absolute;left:36px;top:24px;font-size:13px;letter-spacing:.5em;font-weight:600;color:#dcecef;display:flex;align-items:center;gap:12px}
+  .p-title i{width:8px;height:8px;background:var(--cyan);transform:rotate(45deg);box-shadow:0 0 6px var(--cyan);animation:diamond 3s ease-in-out infinite}
+  @keyframes diamond{50%{box-shadow:0 0 14px var(--cyan),0 0 2px #fff;transform:rotate(45deg) scale(1.15)}}
+  .legend{position:absolute;top:27px;font-size:11.5px;letter-spacing:.32em;font-weight:600;color:#a6bec4;display:flex;align-items:center;gap:10px;white-space:nowrap}
+  .lg-line{width:20px;height:3px;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+  .lg-dash{width:20px;height:0;border-top:2px dashed var(--gold)}
+  .lg-bars{display:flex;gap:2px}.lg-bars s{width:4px;height:12px;background:var(--green)}.lg-bars s+s{background:var(--rose)}
+  .badge{position:absolute;left:1356px;min-width:90px;height:39px;padding:1px;background:rgba(80,230,180,.5);transition:top .8s cubic-bezier(.2,.8,.2,1);
+    clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+  .badge div{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:0 12px;white-space:nowrap;font-family:'Exo 2';font-size:17px;
+    color:#9ff7e2;background:rgba(14,48,46,.92);clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+  .badge.neg{background:rgba(255,92,122,.5)}.badge.neg div{color:#ffb0be;background:rgba(48,16,24,.92)}
+  .badge.pulse{animation:bp .9s ease-out}
+  @keyframes bp{from{filter:brightness(1.9)}}
+
+  /* chart effects */
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw var(--t,1.6s) cubic-bezier(.45,0,.2,1) forwards;animation-delay:var(--d,0s)}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .fadein{opacity:0;animation:fade 1s ease forwards;animation-delay:var(--d,0s)}
+  @keyframes fade{to{opacity:1}}
+  .grow{transform-box:fill-box;animation:grow .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+  @keyframes grow{from{transform:scaleY(0)}}
+  .live{animation:livebar 1.6s ease-in-out infinite}
+  @keyframes livebar{50%{opacity:.35}}
+  .pt{transform-box:fill-box;opacity:0;animation:float var(--dur,6s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+  @keyframes float{0%{transform:translateY(8px);opacity:0}30%,70%{opacity:var(--o,.5)}100%{transform:translateY(-26px);opacity:0}}
+
+  .footer{position:absolute;top:855px;font-size:10px;letter-spacing:.42em;font-weight:600;color:#5f7d85}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .draw{stroke-dashoffset:0}.fadein,.pt{opacity:1}
+  }
+
+html.still *, html.still *::before, html.still *::after { animation: none !important; transition: none !important; }
+html.still .boot { opacity: 1 !important; transform: none !important; filter: none !important; }
+html.loading #stage { opacity: 0; }
+.live-error { display:flex; align-items:center; justify-content:center; width:1600px; height:900px; color:#5ad8f5; font-family:'Orbitron',sans-serif; font-size:32px; letter-spacing:6px; }
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+  <div class="beams"></div>
+  <div class="sweep"></div>
+  <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+
+  <!-- HEADER -->
+  <svg class="abs logo boot" style="left:52px;top:42px;--d:.05s" width="54" height="54" viewBox="0 0 54 54">
+    <polygon points="27,2 49,14.5 49,39.5 27,52 5,39.5 5,14.5" fill="rgba(20,60,72,.35)" stroke="#5ad8f5" stroke-width="1.6" opacity=".9"/>
+    <polygon class="hex-in" points="27,11 41,19 41,35 27,43 13,35 13,19" fill="none" stroke="#5ad8f5" stroke-width="1.2" opacity=".55"/>
+    <circle cx="27" cy="27" r="7.5" fill="none" stroke="rgba(217,164,65,.35)" stroke-width="3"/>
+    <circle class="core" cx="27" cy="27" r="5" fill="#f2b64a" style="filter:drop-shadow(0 0 4px #f2b64a)"/>
+  </svg>
+  <div class="abs brand"><span style="--i:0">F</span><span style="--i:1">R</span><span style="--i:2">I</span><span style="--i:3">D</span><span style="--i:4">A</span><span style="--i:5">Y</span></div>
+  <div class="abs brand-sub boot" style="--d:.7s">PROFIT UPDATE</div>
+
+  <svg id="wave" class="abs boot" style="left:608px;top:44px;--d:.3s" width="384" height="48"></svg>
+
+  <div class="abs pill-wrap boot" style="left:1194px;top:52px;--d:.4s"><div class="pill online"><i></i>ONLINE</div></div>
+  <div class="abs goal-head boot" style="left:1020px;top:67px;--d:.6s">GOAL $1,000,000 · 3 YEARS</div>
+  <div class="abs pill-wrap boot" style="left:1312px;top:52px;--d:.5s"><div class="pill clock" id="clock">--</div></div>
+
+  <svg class="abs boot" style="left:0;top:110px;--d:.2s" width="1600" height="10">
+    <line x1="57" y1="5" x2="306" y2="5" stroke="#5ad8f5" stroke-width="1.6" opacity=".75"/>
+    <line x1="306" y1="5" x2="1292" y2="5" stroke="#5ad8f5" stroke-width="1" stroke-dasharray="1 3" opacity=".22"/>
+    <line x1="1292" y1="5" x2="1543" y2="5" stroke="#5ad8f5" stroke-width="1.6" opacity=".75"/>
+  </svg>
+  <div class="abs gold-acc"></div>
+  <div class="abs hl-pulse"></div>
+
+  <!-- GAUGE -->
+  <svg id="gauge" class="abs boot" style="left:51px;top:113px;--d:.35s" width="440" height="440" viewBox="0 0 440 440"></svg>
+  <div class="radar boot" style="--d:1s"></div>
+  <div class="g-label g-title boot" style="--d:.6s">PORTFOLIO VALUE</div>
+  <div class="g-label g-value boot" style="--d:.7s" id="gValue"></div>
+  <div class="g-label g-change boot" style="--d:.8s" id="gChange"></div>
+  <div class="g-label g-base boot" style="--d:.9s">BASE $3,000.00</div>
+
+  <!-- CARDS -->
+  <div class="card c1 boot" style="top:138px;--d:.45s;--sd:1s" data-k="d1"></div>
+  <div class="card c2 boot" style="top:274px;--d:.6s;--sd:3.6s" data-k="d30"></div>
+  <div class="card c3 boot" style="top:410px;--d:.75s;--sd:6.2s" data-k="d365"></div>
+
+  <!-- PROFIT CURVE -->
+  <div id="panel" class="boot" style="--d:.9s">
+    <svg id="chart" width="1486" height="291"></svg>
+    <div class="p-title"><i></i>PROFIT CURVE</div>
+    <div class="legend" style="left:1097px"><span class="lg-line"></span>PORTFOLIO</div>
+    <div class="legend" style="left:1227px"><span class="lg-dash"></span>BASE $3K</div>
+    <div class="legend" style="left:1356px"><span class="lg-bars"><s></s><s></s></span>DAILY P&amp;L</div>
+    <div class="badge" id="badge"><div></div></div>
+  </div>
+
+  <div class="footer boot" style="left:57px;--d:1.1s">FRIDAY · PRIVATE CHANNEL</div>
+  <div class="footer boot" style="right:57px;letter-spacing:.42em;margin-right:-.42em;--d:1.1s">SAMPLE REPORT</div>
+</div></div>
+
+<script>
+if (new URLSearchParams(location.search).has('still')) document.documentElement.classList.add('still');
+document.documentElement.classList.add('loading');
+/* =====================================================================
+   FRIDAY PROFIT DASHBOARD
+   Live page: fetches profit.json on load and renders the actual portfolio.
+   $1,000,000 over 3 years is shown as a goal, not as a projected path.
+   ===================================================================== */
+const DAY = 86400000, HOUR = 3600000, SGT = 8 * HOUR;
+const CONFIG = {
+  startBalance: 3000,
+  targetBalance: 1000000,
+  start: Date.UTC(2026, 10, 19, 16, 0, 0),   // 20 Nov 2026 00:00 SGT
+  end:   Date.UTC(2029, 10, 19, 16, 0, 0),   // 19 Nov 2029 00:00 SGT (3 years)
+  seed: 20261120,
+  // Planned return per calendar month (%). Negative = losing month.
+  // Positive months are scaled together so the path lands exactly on the target.
+  monthPlan: {
+    '2026-11': 6,  '2026-12': 11, '2027-01': -5.5, '2027-02': 16, '2027-03': 21, '2027-04': -8,
+    '2027-05': 27, '2027-06': 31, '2027-07': 24,  '2027-08': -11, '2027-09': 36, '2027-10': 40,
+    '2027-11': 29, '2027-12': -6, '2028-01': 44,  '2028-02': 38, '2028-03': -4, '2028-04': 47,
+    '2028-05': 30
+  }
+};
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- seeded path ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const SIM = (function build(){
+  const rnd = mulberry32(CONFIG.seed);
+  const gauss = () => { let u = 0; while (!u) u = rnd(); const v = rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const D = Math.round((CONFIG.end - CONFIG.start) / DAY);
+  const keyOf = d => { const x = new Date(CONFIG.start + d*DAY + SGT); return x.getUTCFullYear()+'-'+String(x.getUTCMonth()+1).padStart(2,'0'); };
+  const segs = [];
+  for (let d = 0; d < D; d++) { const k = keyOf(d); if (!segs.length || segs[segs.length-1].key !== k) segs.push({key:k, days:[]}); segs[segs.length-1].days.push(d); }
+  segs.forEach(s => { const [y,m] = s.key.split('-').map(Number); const dim = new Date(Date.UTC(y,m,0)).getUTCDate();
+    s.raw = Math.log(1 + (CONFIG.monthPlan[s.key] ?? 10)/100) * s.days.length / dim; });
+  const total = Math.log(CONFIG.targetBalance / CONFIG.startBalance);
+  const neg = segs.filter(s => s.raw < 0).reduce((a,s) => a + s.raw, 0);
+  const pos = segs.filter(s => s.raw > 0).reduce((a,s) => a + s.raw, 0);
+  const k = (total - neg) / pos;
+  const lr = new Array(D);
+  segs.forEach(s => {
+    s.L = s.raw > 0 ? s.raw * k : s.raw;
+    const n = s.days.length, drift = s.L / n, sig = 0.011 + Math.abs(drift);
+    const z = s.days.map(() => Math.max(-3, Math.min(3, gauss())) * sig);
+    const mean = z.reduce((a,b) => a + b, 0) / n;
+    s.days.forEach((d,i) => lr[d] = drift + z[i] - mean);
+  });
+  const closes = []; let c = Math.log(CONFIG.startBalance);
+  for (let d = 0; d < D; d++) { c += lr[d]; closes.push(c); }
+  closes[D-1] = Math.log(CONFIG.targetBalance);
+  return { D, closes };
+})();
+
+/* intraday movement: deterministic in time, zero at each daily close */
+function hash(n){ n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); n = Math.imul(n ^ (n >>> 16), 0x45d9f3b); return ((n ^ (n >>> 16)) >>> 0) / 4294967296 * 2 - 1; }
+function vnoise(t, step, salt){ const i = Math.floor(t/step), f = t/step - i, s = f*f*(3-2*f); return hash(i*7919+salt)*(1-s) + hash((i+1)*7919+salt)*s; }
+function wiggle(t, smooth){
+  const m = t / 60000;
+  const w = 0.0032*Math.sin(m/97*2*Math.PI+1.3) + 0.0026*Math.sin(m/233*2*Math.PI+0.4) + 0.0018*Math.sin(m/521*2*Math.PI+2.2);
+  return smooth ? w : w + 0.0012*vnoise(t, 240000, 11) + 0.0005*vnoise(t, 15000, 29);
+}
+function logClose(d){ return d < 0 ? Math.log(CONFIG.startBalance) : SIM.closes[Math.min(d, SIM.D-1)]; }
+let LIVE_MODE = false;
+function valueAt(t, smooth){
+  if (t <= CONFIG.start) return CONFIG.startBalance;
+  if (t >= CONFIG.end) return CONFIG.targetBalance;
+  const x = (t - CONFIG.start) / DAY, d = Math.floor(x), f = x - d;
+  const a = logClose(d-1), b = logClose(d);
+  const noise = LIVE_MODE ? 0 : wiggle(t, smooth) * Math.sin(Math.PI*f);
+  return Math.exp(a + (b - a)*f + noise);
+}
+function dayIndex(t){ return Math.floor((t - CONFIG.start) / DAY); }
+
+/* ---------- formatting ---------- */
+const fmt2 = v => Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+function fmtAxis(v, step){
+  if (step < 100) return '$' + Math.round(v).toLocaleString('en-US');
+  const unit = v >= 1e6 && step >= 1e5 ? 1e6 : 1e3, dec = Math.max(0, Math.ceil(-Math.log10(step/unit) - 1e-9));
+  return '$' + (v/unit).toFixed(dec) + (unit === 1e6 ? 'M' : 'K');
+}
+const pad2 = n => String(n).padStart(2,'0');
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs={}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+/* ---------- scaling ---------- */
+function fit(){ const s = Math.min(innerWidth/1600, innerHeight/900); document.getElementById('stage').style.transform = `scale(${s})`; }
+addEventListener('resize', fit); fit();
+
+/* ---------- tween engine (smooth number + ring changes) ---------- */
+const TW = {};
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+function setT(k, v, dur){ const s = TW[k] || (TW[k] = {cur:0, from:0, target:0, t0:0, dur:1}); s.from = s.cur; s.target = v; s.t0 = performance.now(); s.dur = REDUCED ? 1 : dur; }
+function stepTweens(now){ let active = false; for (const k in TW) { const s = TW[k], p = Math.min(1, (now - s.t0)/s.dur); s.cur = s.from + (s.target - s.from)*easeOut(p); if (p < 1) active = true; } return active; }
+const T = k => TW[k] ? TW[k].cur : 0;
+
+/* ---------- waveform ---------- */
+const wave = document.getElementById('wave'), WBARS = 78, wbars = [];
+const wrnd = mulberry32(7);
+let waveEnergy = 0;
+for (let i = 0; i < WBARS; i++) {
+  const p = i/(WBARS-1), env = Math.pow(Math.sin(Math.PI*p), 2.2);
+  const base = 2 + env*(18 + wrnd()*26);
+  wbars.push({ base, env, ph: wrnd()*6.28, sp: .6 + wrnd()*1.4, r: el('rect', {x: i*4.92, width: env > .08 ? 2 : 1.6, rx: .8, fill:'#5ad8f5'}, wave) });
+}
+function animWave(ts){
+  waveEnergy *= 0.965;
+  const pos = (ts/16) % (WBARS + 50) - 25;               // a bright pulse travelling left → right
+  wbars.forEach((b, i) => {
+    const pulse = Math.exp(-((i - pos)**2)/28);
+    const amp = .74 + .2*Math.sin(ts/1000*b.sp*2 + b.ph) + pulse*.35*(.3 + b.env) + waveEnergy*.55*b.env;
+    const h = Math.max(1.6, Math.min(46, b.base*amp));
+    b.r.setAttribute('y', 24 - h/2); b.r.setAttribute('height', h);
+    b.r.setAttribute('opacity', Math.min(1, .32 + h/34 + pulse*.3));
+    b.r.setAttribute('fill', pulse > .45 ? '#c8f6ff' : '#5ad8f5');
+  });
+}
+
+/* ---------- gauge ---------- */
+const gauge = document.getElementById('gauge'), GC = 220;
+const defs = el('defs', {}, gauge);
+const glow = el('filter', {id:'glow', x:'-50%', y:'-50%', width:'200%', height:'200%'}, defs);
+el('feGaussianBlur', {stdDeviation:'3.2', result:'b'}, glow);
+const fm = el('feMerge', {}, glow); el('feMergeNode', {in:'b'}, fm); el('feMergeNode', {in:'SourceGraphic'}, fm);
+const pt = (r, deg) => [GC + r*Math.sin(deg*Math.PI/180), GC - r*Math.cos(deg*Math.PI/180)];
+function arcD(r, a0, a1){ // degrees clockwise from 12 o'clock
+  if (Math.abs(a1 - a0) >= 359.9) { const [x,y] = pt(r,0), [x2,y2] = pt(r,180); return `M${x},${y}A${r},${r} 0 1 1 ${x2},${y2}A${r},${r} 0 1 1 ${x},${y}`; }
+  const [x0,y0] = pt(r,a0), [x1,y1] = pt(r,a1), large = Math.abs(a1-a0) > 180 ? 1 : 0, sweep = a1 > a0 ? 1 : 0;
+  return `M${x0},${y0}A${r},${r} 0 ${large} ${sweep} ${x1},${y1}`;
+}
+el('circle', {cx:GC, cy:GC, r:216, fill:'none', stroke:'rgba(90,216,245,.06)'}, gauge);
+el('circle', {cx:GC, cy:GC, r:190, fill:'none', stroke:'rgba(90,216,245,.08)'}, gauge);
+const outer = el('g', {class:'spin'}, gauge);
+[[20,64],[112,142],[200,250]].forEach(([a,b]) => el('path', {d:arcD(186,a,b), fill:'none', stroke:'rgba(160,225,240,.55)', 'stroke-width':1.2}, outer));
+const orbit = el('g', {class:'orbit'}, gauge);
+el('path', {d:arcD(190,-26,0), fill:'none', stroke:'rgba(140,230,250,.35)', 'stroke-width':1.4, 'stroke-linecap':'round'}, orbit);
+[[0,2.4,1],[-5,1.8,.6],[-10,1.3,.35]].forEach(([a,r,o]) => { const [x,y] = pt(190,a); el('circle', {cx:x, cy:y, r, fill:'#bff3ff', opacity:o, style:'filter:drop-shadow(0 0 4px #5ad8f5)'}, orbit); });
+for (let a = 0; a < 360; a += 3) {
+  const major = a % 30 === 0, [x0,y0] = pt(major ? 168 : 174, a), [x1,y1] = pt(179, a);
+  el('line', {x1:x0, y1:y0, x2:x1, y2:y1, stroke: major ? 'rgba(170,230,240,.75)' : 'rgba(120,200,215,.22)', 'stroke-width': major ? 1.6 : 1}, gauge);
+}
+[[0,185,197],[180,185,197],[90,184,196],[270,184,196],[90,118,126],[270,118,126]].forEach(([a,r0,r1]) => { const [x0,y0]=pt(r0,a),[x1,y1]=pt(r1,a); el('line',{x1:x0,y1:y0,x2:x1,y2:y1,stroke:'rgba(170,230,240,.7)','stroke-width':1.5},gauge); });
+el('circle', {cx:GC, cy:GC, r:132, fill:'rgba(6,22,28,.55)', stroke:'rgba(90,216,245,.14)'}, gauge);
+el('circle', {cx:GC, cy:GC, r:121, fill:'none', stroke:'rgba(120,200,215,.25)', 'stroke-dasharray':'1 4', class:'spin-rev'}, gauge);
+const RINGS = [
+  {k:'d365', r:165, w:9,   col:'#3ef0a8', lab:'365D'},
+  {k:'d30',  r:151, w:7,   col:'#4fd6ff', lab:'30D'},
+  {k:'d1',   r:139, w:5.5, col:'#e8f6ff', lab:'24H'}
+];
+RINGS.forEach(R => {
+  el('circle', {cx:GC, cy:GC, r:R.r, fill:'none', stroke:'rgba(255,255,255,.045)', 'stroke-width':R.w}, gauge);
+  R.path = el('path', {fill:'none', 'stroke-width':R.w, 'stroke-linecap':'round', filter:'url(#glow)'}, gauge);
+  R.halo = el('circle', {r:R.w/2 + 2, fill:'none', stroke:R.col, 'stroke-width':1.2, class:'ripple'}, gauge);
+  R.dot = el('circle', {r:R.w/2 + 1.2, fill:'#071419', stroke:'#fff', 'stroke-width':1.6}, gauge);
+  const t = el('text', {x:GC-8, y:GC-R.r+3.5, 'text-anchor':'end', fill:R.col, 'font-family':'Orbitron', 'font-weight':600, 'font-size':9.5, 'letter-spacing':'.5'}, gauge);
+  t.textContent = R.lab;
+});
+const RING_DEG_PER_PCT = 12, RING_MAX_DEG = 300; // 1% = 12° of arc; arcs stop before the label gap
+
+/* ---------- cards ---------- */
+const CARD_META = { d1:['24H','HOURS'], d30:['30D','DAYS'], d365:['365D','DAYS'] };
+const CARDS = {};
+document.querySelectorAll('.card').forEach(c => {
+  const k = c.dataset.k, hi = k === 'd365', W = 1015, H = 120, ch = 22;
+  c.innerHTML = `<svg class="frame" width="${W}" height="${H}"><polygon points="${ch},0.5 ${W-.5},0.5 ${W-.5},${H-ch} ${W-ch},${H-.5} 0.5,${H-.5} 0.5,${ch}"
+      fill="${hi ? 'rgba(30,82,70,.42)' : 'rgba(18,46,56,.5)'}" stroke="${hi ? 'rgba(80,230,170,.5)' : 'rgba(90,200,220,.26)'}" stroke-width="1"/></svg>
+    <div class="streak"><i></i></div>
+    <div class="accent"></div><div class="per">${CARD_META[k][0]}</div><div class="unit">${CARD_META[k][1]}</div><div class="div"></div>
+    <div class="val"></div><div class="chg"><b></b><span></span></div><svg class="spark" viewBox="0 0 552 86"></svg>`;
+  CARDS[k] = { val: c.querySelector('.val'), chg: c.querySelector('.chg'), arrow: c.querySelector('.chg b'), pct: c.querySelector('.chg span'), spark: c.querySelector('.spark') };
+});
+
+function sparkline(svg, pts, colA, colB, id, intro){
+  let st = svg.__st;
+  if (!st) {
+    st = svg.__st = { body: el('g', {}, svg), end: el('g', {}, svg) };
+    if (intro && !REDUCED) { st.end.classList.add('fadein'); st.end.style.setProperty('--d', '1.9s'); }
+    el('circle', {r:5, fill:'none', stroke:colB, 'stroke-width':1.2, class:'ripple'}, st.end);
+    el('circle', {r:5, fill:'none', stroke:colB, 'stroke-width':1.2, class:'ripple r2'}, st.end);
+    el('circle', {r:8, fill:'rgba(255,255,255,.12)'}, st.end);
+    el('circle', {r:3.6, fill:'#fff', style:'filter:drop-shadow(0 0 4px #fff)'}, st.end);
+  }
+  const g = st.body; g.innerHTML = '';
+  const W = 552, top = 6, bot = 74;
+  const vs = pts.map(p => p[1]), mn = Math.min(...vs), mx = Math.max(...vs), rng = mx - mn;
+  const xy = pts.map((p,i) => [i/(pts.length-1)*(W-14), rng ? bot - (p[1]-mn)/rng*(bot-top) : (top+bot)/2]);
+  const d = smoothPath(xy);
+  const df = el('defs', {}, g);
+  const lg = el('linearGradient', {id:'l'+id, x1:0, x2:1, y1:0, y2:0}, df); el('stop',{offset:0,'stop-color':colA},lg); el('stop',{offset:1,'stop-color':colB},lg);
+  const ag = el('linearGradient', {id:'a'+id, x1:0, x2:0, y1:0, y2:1}, df); el('stop',{offset:0,'stop-color':colB,'stop-opacity':.22},ag); el('stop',{offset:1,'stop-color':colB,'stop-opacity':0},ag);
+  el('line', {x1:0, y1:82, x2:W, y2:82, stroke:'rgba(140,200,215,.12)'}, g);
+  for (let i = 1; i < 8; i++) el('line', {x1:i*W/8, y1:80, x2:i*W/8, y2:84, stroke:'rgba(140,200,215,.25)'}, g);
+  const area = el('path', {d: d + `L${xy[xy.length-1][0]},82L0,82Z`, fill:`url(#a${id})`}, g);
+  const line = el('path', {d, fill:'none', stroke:`url(#l${id})`, 'stroke-width':2.2, style:'filter:drop-shadow(0 0 4px '+colB+')'}, g);
+  if (intro && !REDUCED) {
+    line.setAttribute('pathLength', 1); line.classList.add('draw'); line.style.setProperty('--d', '.9s'); line.style.setProperty('--t', '1.2s');
+    area.classList.add('fadein'); area.style.setProperty('--d', '1.6s');
+  }
+  const [ex,ey] = xy[xy.length-1];
+  st.end.setAttribute('transform', `translate(${ex.toFixed(1)},${ey.toFixed(1)})`);
+}
+function smoothPath(p){
+  let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for (let i = 1; i < p.length; i++) {
+    const p0 = p[i-2] || p[i-1], p1 = p[i-1], p2 = p[i], p3 = p[i+1] || p2;
+    const c1 = [p1[0] + (p2[0]-p0[0])/6, p1[1] + (p2[1]-p0[1])/6], c2 = [p2[0] - (p3[0]-p1[0])/6, p2[1] - (p3[1]-p1[1])/6];
+    d += `C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+function samples(t0, t1, n){ const out = []; for (let i = 0; i < n; i++) { const t = t0 + (t1 - t0)*i/(n-1); out.push([t, i === n-1 ? valueAt(t) : valueAt(t, true)]); } return out; }
+// daily closes between t0 and t1 (plus both ends) — used for the longer views
+function series(t0, t1){
+  if (t1 - t0 <= 6*DAY) return samples(t0, t1, 120);
+  const out = [[t0, valueAt(t0, true)]];
+  for (let d = Math.floor((t0 - CONFIG.start)/DAY) + 1; CONFIG.start + d*DAY < t1; d++) out.push([CONFIG.start + d*DAY, Math.exp(logClose(d-1))]);
+  out.push([t1, valueAt(t1)]);
+  return out;
+}
+
+/* ---------- profit curve ---------- */
+const chart = document.getElementById('chart');
+const PX0 = 86, PX1 = 1327, PY0 = 66, PY1 = 196, BAR_Y = 226, AXIS_Y = 253;
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+function sgtDate(t){ const x = new Date(t + SGT); return {y:x.getUTCFullYear(), m:x.getUTCMonth(), d:x.getUTCDate()}; }
+(function chartStatic(){
+  const W = 1486, H = 291;
+  el('polygon', {points:`0.5,12 12,0.5 ${W-240},0.5 ${W-226},12 ${W-.5},12 ${W-.5},${H-28} ${W-28},${H-.5} 0.5,${H-.5}`,
+    fill:'rgba(12,34,42,.5)', stroke:'rgba(90,200,220,.25)'}, chart);
+  const df = el('defs', {}, chart);
+  const ag = el('linearGradient', {id:'cArea', x1:0, x2:0, y1:0, y2:1}, df);
+  el('stop',{offset:0,'stop-color':'#3ef0b0','stop-opacity':.32},ag); el('stop',{offset:1,'stop-color':'#3ef0b0','stop-opacity':.02},ag);
+  const bx = el('linearGradient', {id:'cBox', x1:0, x2:0, y1:0, y2:1}, df);
+  el('stop',{offset:0,'stop-color':'#5ad8f5','stop-opacity':.07},bx); el('stop',{offset:1,'stop-color':'#5ad8f5','stop-opacity':0},bx);
+})();
+const cBody = el('g', {}, chart);
+const cFx = el('g', {class:'fadein', style:'--d:2.4s'}, chart);
+const PARTS = []; (function(){ const pr = mulberry32(99);
+  for (let i = 0; i < 30; i++) {
+    const c = el('circle', {r:(.6 + pr()*1.2).toFixed(2), fill:'#9fe9f5', class:'pt'}, cFx);
+    c.style.setProperty('--dur', (4 + pr()*6).toFixed(2) + 's'); c.style.setProperty('--dl', (-pr()*9).toFixed(2) + 's'); c.style.setProperty('--o', (.25 + pr()*.5).toFixed(2));
+    PARTS.push({c, fx:pr(), fy:pr()});
+  }
+})();
+const END = el('g', {}, cFx);
+el('circle', {r:9, fill:'none', stroke:'rgba(160,225,240,.7)', 'stroke-width':1.2, class:'ripple'}, END);
+el('circle', {r:9, fill:'none', stroke:'rgba(160,225,240,.7)', 'stroke-width':1.2, class:'ripple r2'}, END);
+el('circle', {r:15, fill:'none', stroke:'rgba(160,225,240,.35)'}, END);
+el('circle', {r:9, fill:'rgba(10,30,36,.7)', stroke:'#e9fbff', 'stroke-width':1.6}, END);
+el('circle', {r:4, fill:'#fff', style:'filter:drop-shadow(0 0 5px #fff)'}, END);
+
+let chartIntro = true;
+function drawChart(now){
+  cBody.innerHTML = '';
+  const intro = chartIntro && !REDUCED; chartIntro = false;
+  const pre = now < CONFIG.start;
+  const t0 = CONFIG.start, t1 = Math.max(Math.min(now, CONFIG.end), t0 + HOUR);
+  const pts = pre ? [[t0, CONFIG.startBalance], [t1, CONFIG.startBalance]] : series(t0, t1);
+  let mn = Math.min(CONFIG.startBalance, ...pts.map(p => p[1])), mx = Math.max(...pts.map(p => p[1]));
+  const span = mx - mn || mx*0.01; mn -= span*.08; mx += span*.1;
+  const X = t => PX0 + (t - t0)/(t1 - t0)*(PX1 - PX0);
+  const Y = v => PY1 - (v - mn)/(mx - mn)*(PY1 - PY0);
+
+  // y ticks
+  const raw = (mx - mn)/3, mag = Math.pow(10, Math.floor(Math.log10(raw))), nf = raw/mag;
+  const step = (nf < 1.5 ? 1 : nf < 3.5 ? 2 : nf < 7.5 ? 5 : 10)*mag;
+  for (let v = Math.ceil(mn/step)*step; v <= mx; v += step) {
+    const y = Y(v);
+    el('line', {x1:PX0, y1:y, x2:PX1, y2:y, stroke:'rgba(140,200,215,.07)', 'stroke-dasharray':'2 5'}, cBody);
+    if (Math.abs(v - CONFIG.startBalance) < step*.3) continue;
+    el('text', {x:72, y:y+4.5, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Exo 2', 'font-size':13}, cBody).textContent = fmtAxis(v, step);
+  }
+  const yb = Y(CONFIG.startBalance);
+  const base = el('line', {x1:PX0, y1:yb, x2:PX1, y2:yb, stroke:'#d9a441', 'stroke-width':1.3, 'stroke-dasharray':'6 6', opacity:.75}, cBody);
+  el('text', {x:72, y:yb+4.5, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Exo 2', 'font-size':13}, cBody).textContent = fmtAxis(CONFIG.startBalance, step);
+  if (intro) { base.classList.add('fadein'); base.style.setProperty('--d', '.4s'); }
+
+  // 30D window
+  const w0 = Math.max(t0, t1 - 30*DAY), xw = X(w0), xe = X(t1);
+  const box = el('g', {}, cBody); if (intro) { box.classList.add('fadein'); box.style.setProperty('--d', '1.2s'); }
+  el('rect', {x:xw, y:PY0-6, width:xe-xw, height:PY1-PY0+6, fill:'url(#cBox)'}, box);
+  el('line', {x1:xw, y1:PY0-6, x2:xe, y2:PY0-6, stroke:'rgba(90,216,245,.3)'}, box);
+  el('line', {x1:xw, y1:PY0-6, x2:xw, y2:PY1, stroke:'rgba(90,216,245,.12)'}, box);
+  el('line', {x1:xe, y1:PY0-6, x2:xe, y2:AXIS_Y, stroke:'rgba(160,225,240,.4)', 'stroke-dasharray':'2 3'}, box);
+  el('text', {x:xw + (xe-xw)*.5, y:PY0+9, 'text-anchor':'middle', fill:'#bfe9f2', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':11, 'letter-spacing':'3'}, box).textContent = '30D •';
+
+  const xy = pts.map(p => [X(p[0]), Y(p[1])]);
+  const split = Math.max(1, xy.findIndex(p => p[0] >= xw));
+  const older = xy.slice(0, split + 1), recent = xy.slice(split);
+  const oldFrac = (xw - PX0) / (PX1 - PX0);
+  if (older.length > 1 && xw > PX0 + 1) {
+    const p = el('path', {d:smoothPath(older), fill:'none', stroke:'#5fd8ff', 'stroke-width':2.2, style:'filter:drop-shadow(0 0 5px rgba(95,216,255,.8))'}, cBody);
+    if (intro) { p.setAttribute('pathLength', 1); p.classList.add('draw'); p.style.setProperty('--d', '.6s'); p.style.setProperty('--t', (1.6*oldFrac).toFixed(2) + 's'); }
+  }
+  if (recent.length > 1) {
+    const a = el('path', {d:smoothPath(recent) + `L${recent[recent.length-1][0]},${PY1}L${recent[0][0]},${PY1}Z`, fill:'url(#cArea)'}, cBody);
+    const p = el('path', {d:smoothPath(recent), fill:'none', stroke:'#4ef2b8', 'stroke-width':2.4, style:'filter:drop-shadow(0 0 6px rgba(62,240,168,.85))'}, cBody);
+    if (intro) {
+      const dl = .6 + 1.6*oldFrac;
+      p.setAttribute('pathLength', 1); p.classList.add('draw'); p.style.setProperty('--d', dl.toFixed(2) + 's'); p.style.setProperty('--t', Math.max(.6, 1.6*(1-oldFrac)).toFixed(2) + 's');
+      a.classList.add('fadein'); a.style.setProperty('--d', (dl + .8).toFixed(2) + 's');
+    }
+  }
+  PARTS.forEach(p => { p.c.setAttribute('cx', (xw + p.fx*(xe - xw)).toFixed(1)); p.c.setAttribute('cy', (PY0 + 8 + p.fy*(PY1 - PY0)*.55).toFixed(1)); });
+  const [ex, ey] = xy[xy.length-1];
+  END.setAttribute('transform', `translate(${ex.toFixed(1)},${ey.toFixed(1)})`);
+
+  // daily P&L bars
+  if (!pre) {
+    const dNow = Math.min(dayIndex(t1 - 1), SIM.D - 1);
+    const pnl = [];
+    for (let d = 0; d <= dNow; d++) { const prev = Math.exp(logClose(d-1)); const cur = d === dNow ? valueAt(t1) : Math.exp(logClose(d)); pnl.push(cur - prev); }
+    const maxAbs = Math.max(...pnl.map(Math.abs)) || 1;
+    const slot = (PX1 - PX0) * DAY / (t1 - t0), bw = Math.max(1.2, Math.min(9, slot*.55));
+    pnl.forEach((v,d) => {
+      const xc = Math.min(PX1 - bw/2, X(Math.min(t0 + (d+.5)*DAY, t1))), h = Math.max(1.5, Math.abs(v)/maxAbs*22);
+      const r = el('rect', {x:xc - bw/2, y: v >= 0 ? BAR_Y - h : BAR_Y, width:bw, height:h, fill: v >= 0 ? '#3ee8a8' : '#e2506e', opacity:.88}, cBody);
+      r.style.transformOrigin = v >= 0 ? 'center bottom' : 'center top';
+      if (intro) { r.classList.add('grow'); r.style.setProperty('--d', (.8 + 1.4*d/Math.max(1, pnl.length)).toFixed(2) + 's'); }
+      if (d === dNow && now < CONFIG.end) r.classList.add('live');
+    });
+  }
+  el('line', {x1:PX0, y1:BAR_Y, x2:PX1, y2:BAR_Y, stroke:'rgba(140,200,215,.1)'}, cBody);
+  el('text', {x:72, y:BAR_Y+4, 'text-anchor':'end', fill:'#86a2aa', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':10.5, 'letter-spacing':'2.5'}, cBody).textContent = 'DAILY';
+
+  // x axis
+  el('line', {x1:PX0, y1:AXIS_Y, x2:PX1, y2:AXIS_Y, stroke:'rgba(140,200,215,.3)'}, cBody);
+  const lbl = (x, s, anchor) => { el('text', {x, y:AXIS_Y+22, 'text-anchor':anchor, fill:'#a9c0c6', 'font-family':'Rajdhani', 'font-weight':600, 'font-size':12.5, 'letter-spacing':'3'}, cBody).textContent = s; };
+  const tick = x => el('line', {x1:x, y1:AXIS_Y, x2:x, y2:AXIS_Y+6, stroke:'rgba(140,200,215,.45)'}, cBody);
+  const sd = sgtDate(t0), nd = sgtDate(t1);
+  tick(PX0); lbl(PX0, `${sd.d} ${MON[sd.m]}`, 'start');
+  const endX = X(t1), placed = [PX0];
+  if (!pre && endX - PX0 > 90) { tick(endX); lbl(endX, `${nd.d} ${MON[nd.m]}`, 'end'); }
+  let y = sd.y, m = sd.m + 1;
+  while (true) {
+    if (m > 11) { m = 0; y++; }
+    const tm = Date.UTC(y, m, 1) - SGT; if (tm >= t1) break;
+    const x = X(tm); tick(x);
+    const mid = X(Math.min(t1, tm + 15*DAY)); if (mid < endX - 4) el('line', {x1:mid, y1:AXIS_Y, x2:mid, y2:AXIS_Y+4, stroke:'rgba(140,200,215,.25)'}, cBody);
+    if (x - placed[placed.length-1] > 62 && endX - x > 95) { lbl(x, m === 0 ? `JAN '${String(y).slice(2)}` : MON[m], 'middle'); placed.push(x); }
+    m++;
+  }
+
+  // badge follows the end of the line (its % is tweened in render)
+  document.getElementById('badge').style.top = Math.max(42, Math.min(ey - 20, 200)) + 'px';
+}
+
+/* ---------- live data ---------- */
+const clockFmt = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Singapore', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
+function periodChange(now, span){
+  const ref = valueAt(Math.max(CONFIG.start, now - span)), cur = valueAt(now);
+  return { abs: cur - ref, pct: (cur/ref - 1)*100 };
+}
+const gv = document.getElementById('gValue'), gc = document.getElementById('gChange'), badge = document.getElementById('badge');
+let first = true, lastVal = null, lastBadge = null, lastHeavy = 0, tickN = 0, isPre = false, needRender = true, wasActive = false;
+
+function retrigger(node, cls){ node.classList.remove(...cls.split(' ')); void node.getBoundingClientRect(); }
+function flash(node, up){ retrigger(node, 'flash-up flash-dn'); node.classList.add(up ? 'flash-up' : 'flash-dn'); }
+
+function tick(){
+  const now = Date.now();
+  const parts = clockFmt.formatToParts(now).reduce((o, p) => (o[p.type] = p.value, o), {});
+  document.getElementById('clock').innerHTML = `${parts.day} ${parts.month.toUpperCase()} ${parts.year} · ${parts.hour}<b>:</b>${parts.minute} SGT`;
+  isPre = now < CONFIG.start;
+  needRender = true;
+  if (!first && tickN++ % 2) return;              // data refresh every 2 s; clock and countdown every 1 s
+
+  const t = Math.min(now, CONFIG.end), val = valueAt(t);
+  const ch = { d1: periodChange(t, DAY), d30: periodChange(t, 30*DAY), d365: periodChange(t, 365*DAY) };
+  const dur = first ? 2200 : 900;
+  setT('val', val, dur);
+  setT('all', (val/CONFIG.startBalance - 1)*100, dur);
+  for (const k in ch) { setT(k+'a', ch[k].abs, dur); setT(k+'p', ch[k].pct, dur); setT('r'+k, ch[k].pct, first ? 2600 : 1200); }
+
+  if (!first && lastVal !== null && Math.abs(val - lastVal) >= 0.01) {
+    const up = val > lastVal;
+    flash(gv, up); flash(CARDS.d1.val, up);
+    waveEnergy = Math.min(1, waveEnergy + .35 + Math.min(.65, Math.abs(val - lastVal)/val*800));
+    retrigger(CARDS.d1.arrow, 'bump'); CARDS.d1.arrow.classList.add('bump');
+  }
+  lastVal = val;
+
+  if (now - lastHeavy > 6000) {
+    const s0 = CONFIG.start, te = Math.max(Math.min(now, CONFIG.end), s0 + 60000);
+    const flat = [[0, CONFIG.startBalance], [1, CONFIG.startBalance]];
+    sparkline(CARDS.d1.spark,  isPre ? flat : samples(Math.max(s0, te - DAY), te, 49), '#4fd6ff', '#5ee0ff', 'd1', first);
+    sparkline(CARDS.d30.spark, isPre ? flat : series(Math.max(s0, te - 30*DAY), te), '#4fd6ff', '#3ef0b0', 'd30', first);
+    sparkline(CARDS.d365.spark,isPre ? flat : series(Math.max(s0, te - 365*DAY), te), '#4fd6ff', '#3ef0b0', 'd365', first);
+    drawChart(now);
+    const bp = (val/CONFIG.startBalance - 1)*100;
+    if (lastBadge !== null && Math.abs(bp - lastBadge) > .004) { retrigger(badge, 'pulse'); badge.classList.add('pulse'); }
+    lastBadge = bp; lastHeavy = now;
+  }
+  first = false;
+}
+
+/* ---------- per-frame render ---------- */
+function countdown(ms){
+  const s = Math.max(0, Math.floor(ms/1000)), dd = Math.floor(s/86400), hh = Math.floor(s%86400/3600), mm = Math.floor(s%3600/60), ss = s%60;
+  return (dd ? dd + 'D ' : '') + `${pad2(hh)}:${pad2(mm)}:${pad2(ss)}`;
+}
+function render(){
+  const v = T('val'), all = v - CONFIG.startBalance, allPct = T('all');
+  gv.style.fontSize = fmt2(v).length >= 12 ? '41px' : '52px';
+  gv.innerHTML = `<sup>$</sup>${fmt2(v)}`;
+  if (isPre) {
+    gc.classList.add('pre'); gc.style.color = '';
+    gc.textContent = `LAUNCH IN ${countdown(CONFIG.start - Date.now())}`;
+  } else {
+    const neg = all < -0.004;
+    gc.classList.remove('pre'); gc.style.color = neg ? '#ff5c7a' : '#3ef0a8';
+    gc.textContent = `${neg ? '▼' : '▲'}  ${neg ? '−' : '+'}$${fmt2(all)} · ${fmt2(allPct)}%`;
+  }
+  for (const k in CARDS) {
+    const abs = T(k+'a'), pct = T(k+'p'), neg = abs < -0.004, C = CARDS[k];
+    C.val.classList.toggle('neg', neg);
+    C.val.innerHTML = `<sup>${neg ? '−' : '+'}$</sup>${fmt2(abs)}`;
+    C.chg.classList.toggle('neg', neg);
+    C.arrow.textContent = neg ? '▼' : '▲';
+    C.pct.textContent = fmt2(pct) + '%';
+  }
+  RINGS.forEach(R => {
+    const pct = T('r'+R.k), deg = Math.max(1.5, Math.min(RING_MAX_DEG, Math.abs(pct)*RING_DEG_PER_PCT));
+    const col = pct < -0.001 ? '#ff5c7a' : R.col;
+    R.path.setAttribute('d', arcD(R.r, 0, deg));
+    R.path.setAttribute('stroke', col); R.halo.setAttribute('stroke', col);
+    const [x,y] = pt(R.r, deg);
+    R.dot.setAttribute('cx', x); R.dot.setAttribute('cy', y);
+    R.halo.setAttribute('cx', x); R.halo.setAttribute('cy', y);
+  });
+  const bn = allPct < -0.004;
+  badge.classList.toggle('neg', bn);
+  badge.firstChild.textContent = (bn ? '−' : '+') + fmt2(allPct) + '%';
+}
+function frame(ts){
+  animWave(ts);
+  const active = stepTweens(performance.now());
+  if (active || wasActive || needRender) { render(); needRender = false; }
+  wasActive = active;
+  requestAnimationFrame(frame);
+}
+
+tick();
+document.fonts && document.fonts.ready.then(() => { needRender = true; });
+setInterval(tick, 1000);
+requestAnimationFrame(frame);
+
+/* ---------- live profit.json override ---------- */
+function liveNumber(v){ const n = typeof v === 'number' ? v : Number(String(v).replace(/[^0-9.+-]/g,'')); return Number.isFinite(n) ? n : null; }
+function liveTime(v){
+  if (typeof v === 'number') return v;
+  const s = String(v || '');
+  const t = Date.parse(s.length === 10 ? s + 'T00:00:00+08:00' : s);
+  return Number.isFinite(t) ? t : null;
+}
+function liveMoney(v){ return '$' + Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function liveShort(v){
+  if (v >= 1e6) return '$' + (v/1e6).toFixed(v % 1e6 ? 1 : 0) + 'M';
+  if (v >= 1e3) return '$' + (v/1e3).toFixed(v % 1e3 ? 1 : 0) + 'K';
+  return '$' + Math.round(v);
+}
+
+function applyLive(l){
+  const initial = liveNumber(l.initial_capital);
+  const current = liveNumber(l.current_value);
+  if (!(initial > 0) || !(current > 0)) throw new Error('profit.json missing initial/current');
+
+  const pts = (Array.isArray(l.history) ? l.history : [])
+    .map(p => [liveTime(p && p.date), liveNumber(p && p.value)])
+    .filter(p => Number.isFinite(p[0]) && p[1] !== null && p[1] > 0)
+    .sort((a,b) => a[0] - b[0]);
+  if (!pts.length) { pts.push([Date.now() - DAY, initial], [Date.now(), current]); }
+  if (pts[0][1] !== initial) pts.unshift([pts[0][0] - DAY, initial]);
+  if (pts[pts.length-1][1] !== current) pts.push([Math.max(Date.now(), pts[pts.length-1][0] + 1), current]);
+
+  const start = pts[0][0];
+  let end = pts[pts.length-1][0];
+  if (end <= start) end = start + DAY;
+  const D = Math.max(1, Math.round((end - start) / DAY));
+  const closes = [];
+  for (let d = 0; d < D; d++) {
+    const t = start + d*DAY;
+    let a = pts[0], b = pts[pts.length-1];
+    for (let i = 0; i < pts.length-1; i++) {
+      if (t >= pts[i][0] && t <= pts[i+1][0]) { a = pts[i]; b = pts[i+1]; break; }
+    }
+    const f = b[0] === a[0] ? 0 : (t - a[0]) / (b[0] - a[0]);
+    closes.push(Math.log(a[1] + (b[1] - a[1]) * f));
+  }
+  closes[D-1] = Math.log(current);
+
+  CONFIG.startBalance = initial;
+  CONFIG.targetBalance = current;
+  CONFIG.start = start;
+  CONFIG.end = end;
+  LIVE_MODE = true;
+  SIM.D = D;
+  SIM.closes = closes;
+
+  const base = document.querySelector('.g-base');
+  if (base) base.textContent = 'BASE ' + liveMoney(initial);
+  const legends = document.querySelectorAll('.legend');
+  if (legends.length > 1) legends[1].innerHTML = '<span class="lg-dash"></span>BASE ' + liveShort(initial);
+  const footers = document.querySelectorAll('.footer');
+  if (footers.length > 1) footers[1].textContent = 'LIVE REPORT';
+
+  first = true;
+  lastVal = null;
+  lastBadge = null;
+  lastHeavy = 0;
+  needRender = true;
+  tick();
+  document.body.dataset.liveReady = '1';
+  document.documentElement.classList.remove('loading');
+}
+
+fetch('profit.json?v=' + Date.now(), {cache:'no-store'})
+  .then(r => { if (!r.ok) throw new Error('profit.json HTTP ' + r.status); return r.json(); })
+  .then(applyLive)
+  .catch(err => {
+    document.body.dataset.liveError = '1';
+    document.documentElement.classList.remove('loading');
+    const stage = document.getElementById('stage');
+    if (stage) stage.innerHTML = '<div class="live-error">LIVE FEED UNAVAILABLE</div>';
+    console.error('FRIDAY live feed:', err);
+  });
+
+</script>
+</body>
+</html>
