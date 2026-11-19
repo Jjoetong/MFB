@@ -4,11 +4,13 @@ Live profit dashboard for the private Friday × Marcus channel.
 
 - **`index.html`** — single-file dashboard, no build step.
 - **`profit.json`** — the live portfolio feed FRIDAY reads.
+- **Goal** — $1,000,000 over 3 years, shown on the card as a target.
 - **GitHub Pages** — serves the dashboard at <https://jjoetong.github.io/MFB/>.
 
 `index.html` fetches `profit.json` from the same origin at load time. There is no
-simulated path and no hard-coded target. If the fetch fails, the page shows
-`LIVE FEED UNAVAILABLE` instead of inventing numbers.
+simulated path. The **$1,000,000 over 3 years** line is a goal, not a projected
+curve. If the fetch fails, the page shows `LIVE FEED UNAVAILABLE` instead of
+inventing numbers.
 
 ## Live data
 
@@ -16,14 +18,15 @@ simulated path and no hard-coded target. If the fetch fails, the page shows
 
 ```json
 {
-  "initial_capital": 10000,
-  "current_value": 12480.22,
-  "today_pnl": 180.00,
+  "initial_capital": 3000,
+  "current_value": 3744.07,
+  "today_pnl": 54.00,
   "updated_at": "2026-11-19T01:35:00+08:00",
   "history": [
-    {"date": "2026-08-22", "value": 10000},
-    {"date": "2026-09-15", "value": 10800},
-    {"date": "2026-11-19", "value": 12480.22}
+    {"date": "2026-08-22", "value": 3000},
+    {"date": "2026-09-15", "value": 3240},
+    {"date": "2026-10-15", "value": 3420},
+    {"date": "2026-11-19", "value": 3744.07}
   ]
 }
 ```
