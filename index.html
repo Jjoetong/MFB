@@ -82,6 +82,7 @@
   .g-change{top:361px;font-family:'Exo 2';font-size:18px;font-weight:500}
   .g-change.pre{font-family:'Rajdhani';font-weight:600;letter-spacing:.28em;font-size:16px;color:var(--gold)}
   .g-base{top:397px;font-size:11.5px;letter-spacing:.42em;color:#8aa5ad;font-weight:600}
+  .goal-head{position:absolute;font-family:'Rajdhani';font-weight:600;font-size:8.5px;letter-spacing:.16em;color:#d9a441;white-space:nowrap;opacity:.95}
   .spin{transform-box:view-box;transform-origin:220px 220px;animation:spin 90s linear infinite}
   .spin-rev{transform-box:view-box;transform-origin:220px 220px;animation:spin 60s linear infinite reverse}
   .orbit{transform-box:view-box;transform-origin:220px 220px;animation:spin 14s linear infinite}
@@ -179,6 +180,7 @@ html.loading #stage { opacity: 0; }
   <svg id="wave" class="abs boot" style="left:608px;top:44px;--d:.3s" width="384" height="48"></svg>
 
   <div class="abs pill-wrap boot" style="left:1194px;top:52px;--d:.4s"><div class="pill online"><i></i>ONLINE</div></div>
+  <div class="abs goal-head boot" style="left:1020px;top:67px;--d:.6s">GOAL $1,000,000 · 3 YEARS</div>
   <div class="abs pill-wrap boot" style="left:1312px;top:52px;--d:.5s"><div class="pill clock" id="clock">--</div></div>
 
   <svg class="abs boot" style="left:0;top:110px;--d:.2s" width="1600" height="10">
@@ -207,7 +209,7 @@ html.loading #stage { opacity: 0; }
     <svg id="chart" width="1486" height="291"></svg>
     <div class="p-title"><i></i>PROFIT CURVE</div>
     <div class="legend" style="left:1097px"><span class="lg-line"></span>PORTFOLIO</div>
-    <div class="legend" style="left:1227px"><span class="lg-dash"></span>BASE $10K</div>
+    <div class="legend" style="left:1227px"><span class="lg-dash"></span>BASE $3K</div>
     <div class="legend" style="left:1356px"><span class="lg-bars"><s></s><s></s></span>DAILY P&amp;L</div>
     <div class="badge" id="badge"><div></div></div>
   </div>
@@ -222,7 +224,7 @@ document.documentElement.classList.add('loading');
 /* =====================================================================
    FRIDAY PROFIT DASHBOARD
    Live page: fetches profit.json on load and renders the actual portfolio.
-   No simulation, no target balance, no hard-coded returns.
+   $1,000,000 over 3 years is shown as a goal, not as a projected path.
    ===================================================================== */
 const DAY = 86400000, HOUR = 3600000, SGT = 8 * HOUR;
 const CONFIG = {
