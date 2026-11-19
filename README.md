@@ -1,16 +1,20 @@
-# FRIDAY · Profit Dashboard
+# FRIDAY · Profit Pages
 
-Live profit dashboard for the private Friday × Marcus channel.
+This repository hosts two separate pages plus the live feed.
 
-- **`index.html`** — single-file dashboard, no build step.
-- **`profit.json`** — the live portfolio feed FRIDAY reads.
-- **Goal** — $1,000,000 over 3 years, shown on the card as a target.
-- **GitHub Pages** — serves the dashboard at <https://jjoetong.github.io/MFB/>.
+- **`index.html`** — Claude's **$3,000 → $1,000,000 / 3-year simulation**.
+  It is explicitly marked `SIMULATED PORTFOLIO` and `SIMULATION · NOT REAL RESULTS`.
+  It does not read `profit.json` and is never sent to Marcus as a real report.
+- **`live.html`** — the **live Profit card** that FRIDAY screenshots for Telegram.
+  It reads `profit.json` and shows only actual portfolio value and P&L.
+- **`profit.json`** — the live portfolio feed.
 
-`index.html` fetches `profit.json` from the same origin at load time. There is no
-simulated path. The **$1,000,000 over 3 years** line is a goal, not a projected
-curve. If the fetch fails, the page shows `LIVE FEED UNAVAILABLE` instead of
-inventing numbers.
+## URLs
+
+- Simulation: <https://jjoetong.github.io/MFB/>
+- Live card: <https://jjoetong.github.io/MFB/live.html>
+
+`FRIDAY_GITHUB_PAGE_URL` must point at **`live.html`**, not the simulation root.
 
 ## Live data
 
@@ -19,14 +23,12 @@ inventing numbers.
 ```json
 {
   "initial_capital": 3000,
-  "current_value": 3744.07,
-  "today_pnl": 54.00,
-  "updated_at": "2026-11-19T01:35:00+08:00",
+  "current_value": 3000,
+  "today_pnl": 0,
+  "updated_at": "2026-11-19T19:25:00+08:00",
   "history": [
-    {"date": "2026-08-22", "value": 3000},
-    {"date": "2026-09-15", "value": 3240},
-    {"date": "2026-10-15", "value": 3420},
-    {"date": "2026-11-19", "value": 3744.07}
+    {"date": "2026-11-18", "value": 3000},
+    {"date": "2026-11-19", "value": 3000}
   ]
 }
 ```
@@ -37,26 +39,12 @@ inventing numbers.
 - `updated_at` — ISO timestamp with timezone.
 - `history` — daily/period points used by the 24H, 30D and 365D strips.
 
-The dashboard shows only portfolio value, net P&L, return, 24H / 30D / 365D
-change, the curve and daily P&L. It does not show positions, allocation or
-strategy.
-
-## Updating
-
-Joe's bots update `profit.json` after a session, then commit. FRIDAY reads the
-same file for the Telegram report and screenshots this page as the Profit card.
-
-## Local preview
-
-```powershell
-python -m http.server 8765 --directory "Profit Results"
-```
-
-Open <http://127.0.0.1:8765/>. The page fetches `profit.json` from the same folder,
-so copy the live file next to `index.html` for a local preview.
+The live page shows portfolio value, net P&L, return, 24H / 30D / 365D change,
+the curve and daily P&L. It does not show positions, allocation or strategy.
 
 ## Rules
 
 - Keep `profit.json` valid JSON. Invalid JSON makes FRIDAY serve its last cached copy.
 - Never commit API tokens or Telegram credentials here.
 - Keep `initial_capital` equal to Marcus's actual deposit.
+- Never point the Telegram card at the simulation root.
