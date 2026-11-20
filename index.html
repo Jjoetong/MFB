@@ -225,9 +225,10 @@
 const DAY = 86400000, HOUR = 3600000, SGT = 8 * HOUR;
 const CONFIG = {
   startBalance: 3000,
+  pathBalance: 3072.23,
   targetBalance: 1000000,
-  start: Date.UTC(2026, 10, 19, 16, 0, 0),   // 20 Nov 2026 00:00 SGT
-  end:   Date.UTC(2029, 10, 19, 16, 0, 0),   // 20 Nov 2029 00:00 SGT (3 years)
+  start: Date.UTC(2026, 10, 20, 13, 49, 0),   // 20 Nov 2026 21:49 SGT
+  end:   Date.UTC(2029, 10, 20, 13, 49, 0),   // 20 Nov 2029 21:49 SGT (3 years)
   seed: 20291120,
   // Planned return per calendar month (%). Negative = losing month.
   // Positive months are scaled together so the path lands exactly on the target.
@@ -256,7 +257,7 @@ const SIM = (function build(){
   for (let d = 0; d < D; d++) { const k = keyOf(d); if (!segs.length || segs[segs.length-1].key !== k) segs.push({key:k, days:[]}); segs[segs.length-1].days.push(d); }
   segs.forEach(s => { const [y,m] = s.key.split('-').map(Number); const dim = new Date(Date.UTC(y,m,0)).getUTCDate();
     s.raw = Math.log(1 + (CONFIG.monthPlan[s.key] ?? 10)/100) * s.days.length / dim; });
-  const total = Math.log(CONFIG.targetBalance / CONFIG.startBalance);
+  const total = Math.log(CONFIG.targetBalance / CONFIG.pathBalance);
   const neg = segs.filter(s => s.raw < 0).reduce((a,s) => a + s.raw, 0);
   const pos = segs.filter(s => s.raw > 0).reduce((a,s) => a + s.raw, 0);
   const k = (total - neg) / pos;
@@ -268,8 +269,9 @@ const SIM = (function build(){
     const mean = z.reduce((a,b) => a + b, 0) / n;
     s.days.forEach((d,i) => lr[d] = drift + z[i] - mean);
   });
-  const closes = []; let c = Math.log(CONFIG.startBalance);
+  const closes = []; let c = Math.log(CONFIG.pathBalance);
   for (let d = 0; d < D; d++) { c += lr[d]; closes.push(c); }
+  closes[0] = Math.log(CONFIG.pathBalance);
   closes[D-1] = Math.log(CONFIG.targetBalance);
   return { D, closes };
 })();
@@ -282,9 +284,10 @@ function wiggle(t, smooth){
   const w = 0.0032*Math.sin(m/97*2*Math.PI+1.3) + 0.0026*Math.sin(m/233*2*Math.PI+0.4) + 0.0018*Math.sin(m/521*2*Math.PI+2.2);
   return smooth ? w : w + 0.0012*vnoise(t, 240000, 11) + 0.0005*vnoise(t, 15000, 29);
 }
-function logClose(d){ return d < 0 ? Math.log(CONFIG.startBalance) : SIM.closes[Math.min(d, SIM.D-1)]; }
+function logClose(d){ return d < 0 ? Math.log(CONFIG.pathBalance) : SIM.closes[Math.min(d, SIM.D-1)]; }
 function valueAt(t, smooth){
-  if (t <= CONFIG.start) return CONFIG.startBalance;
+  if (t <= CONFIG.start) return CONFIG.pathBalance;
+  if (t < CONFIG.start + DAY) return CONFIG.pathBalance;
   if (t >= CONFIG.end) return CONFIG.targetBalance;
   const x = (t - CONFIG.start) / DAY, d = Math.floor(x), f = x - d;
   const a = logClose(d-1), b = logClose(d);
