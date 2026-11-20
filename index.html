@@ -192,7 +192,7 @@
   <div class="g-label g-title boot" style="--d:.6s">PORTFOLIO VALUE</div>
   <div class="g-label g-value boot" style="--d:.7s" id="gValue"></div>
   <div class="g-label g-change boot" style="--d:.8s" id="gChange"></div>
-  <div class="g-label g-base boot" style="--d:.9s" id="gBase">BASE $3,000.00</div>
+  <div class="g-label g-base boot" style="--d:.9s" id="gBase">CAPITAL $3,000.00</div>
 
   <!-- CARDS -->
   <div class="card c1 boot" style="top:138px;--d:.45s;--sd:1s" data-k="d1"></div>
@@ -204,8 +204,8 @@
     <svg id="chart" width="1486" height="291"></svg>
     <div class="p-title"><i></i>PROFIT CURVE</div>
     <div class="legend" style="left:1097px"><span class="lg-line"></span>PORTFOLIO</div>
-    <div class="legend" style="left:1227px"><span class="lg-dash"></span><span id="lgBase">BASE $3K</span></div>
-    <div class="legend" style="left:1356px"><span class="lg-bars"><s></s><s></s></span>DAILY P&amp;L</div>
+    <div class="legend" style="left:1225px"><span class="lg-dash"></span><span id="lgBase">CAPITAL $3K</span></div>
+    <div class="legend" style="left:1385px"><span class="lg-bars"><s></s><s></s></span>DAILY P&amp;L</div>
     <div class="badge" id="badge"><div></div></div>
   </div>
 
@@ -243,8 +243,8 @@ const CONFIG = {
   }
 };
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.getElementById('gBase').textContent = 'BASE $' + CONFIG.startBalance.toLocaleString('en-US', {minimumFractionDigits:2});
-document.getElementById('lgBase').textContent = 'BASE $' + (CONFIG.startBalance >= 1000 ? (CONFIG.startBalance/1000) + 'K' : CONFIG.startBalance);
+document.getElementById('gBase').textContent = 'CAPITAL $' + CONFIG.startBalance.toLocaleString('en-US', {minimumFractionDigits:2});
+document.getElementById('lgBase').textContent = 'CAPITAL $' + (CONFIG.startBalance >= 1000 ? (CONFIG.startBalance/1000) + 'K' : CONFIG.startBalance);
 
 /* ---------- seeded path ---------- */
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -632,7 +632,7 @@ function render(){
   } else {
     const neg = all < -0.004;
     gc.classList.remove('pre'); gc.style.color = neg ? '#ff5c7a' : '#3ef0a8';
-    gc.textContent = `${neg ? '▼' : '▲'}  ${neg ? '−' : '+'}$${fmt2(all)} · ${fmt2(allPct)}%`;
+    gc.textContent = `${neg ? '▼' : '▲'}  ${neg ? 'LOSS' : 'PROFIT'} ${neg ? '−' : '+'}$${fmt2(all)} · ${fmt2(allPct)}%`;
   }
   for (const k in CARDS) {
     const abs = T(k+'a'), pct = T(k+'p'), neg = abs < -0.004, C = CARDS[k];
